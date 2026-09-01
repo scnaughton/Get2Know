@@ -15,32 +15,26 @@ over Zoom/a phone call, or in person by passing one device back and forth.
 
 ## Stack
 
-Next.js 14 (App Router) + TypeScript + Tailwind CSS, with Firebase
+Next.js 16 (App Router) + TypeScript + Tailwind CSS v4, with Firebase
 Firestore for real-time state sync between the two players in a room.
 
 ## Setup
 
 ### 1. Install dependencies
 
-This machine doesn't have Node.js installed globally. A local copy is
-already vendored at `.toolchain/node` for this project — put it on your
-`PATH` for any commands below, or install Node 18+ yourself and skip this:
+Requires Node 18+ (managed here via [nvm](https://github.com/nvm-sh/nvm)).
 
 ```bash
-export PATH="$(pwd)/.toolchain/node/bin:$PATH"
 npm install
 ```
 
-### 2. Create a Firebase project
+### 2. Firebase project
 
-1. Go to the [Firebase console](https://console.firebase.google.com/) and
-   create a new project (or reuse an existing one).
-2. Add a **Web app** to the project (Project settings → General → Your
-   apps → </> Add app). Copy the `firebaseConfig` values it gives you.
-3. Enable **Firestore Database** (Build → Firestore Database → Create
-   database). Start in test mode, then apply the rules below.
-4. In the Firestore console, go to the **Rules** tab and paste the contents
-   of [`firestore.rules`](./firestore.rules) in this repo, then Publish.
+Already set up for this repo: project `get2know-d3dca`, with Firestore
+enabled and `firestore.rules` (in this repo) published to it. To point at a
+different Firebase project instead, add a **Web app** in that project's
+console (Project settings → General → Your apps → </> Add app), enable
+**Firestore Database**, and publish this repo's `firestore.rules` to it.
 
 ### 3. Configure environment variables
 
@@ -48,7 +42,8 @@ npm install
 cp .env.local.example .env.local
 ```
 
-Fill in `.env.local` with the values from your Firebase web app config.
+Fill in `.env.local` with the values from your Firebase web app config
+(already done in this checkout's own `.env.local`, which is gitignored).
 
 ### 4. Run it
 
