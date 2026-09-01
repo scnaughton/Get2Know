@@ -20,6 +20,10 @@ mainly shapes the "User accounts" decision below.
 
 - [ ] Decide on GitHub + Vercel auto-deploy vs. manual redeploys (see
       "Deployment" below)
+- [ ] **Make "Leave game" a clearly visible button**, not the small
+      underlined text link it is today (in `Lobby` and the active-play
+      header in `src/app/room/[roomId]/page.tsx`). It's easy to miss at
+      its current size/weight.
 - [ ] Re-enable Vercel Authentication (or replace with something lighter,
       like a password) once you're done sharing the public link for testing
 - [ ] **User accounts:** given the standalone-but-extensible direction
@@ -50,6 +54,17 @@ mainly shapes the "User accounts" decision below.
 
 ## Recently shipped
 
+- [x] **Fixed turn-order bug: picker and answerer were the same person.**
+      The player who chose the question tier was also the one prompted to
+      answer it and earn the points — the other player only ever scored,
+      never played the "hot seat." Fixed in `submitScore()`
+      (`src/lib/room.ts`): the picker (`currentTurnPlayerId`) now scores
+      the *other* player, who is the actual answerer and earns the
+      points; roles swap each round (this round's answerer becomes next
+      round's picker). Room page UI updated to match: the picker sees
+      "listen in, then score them" during answering and the `HeartRating`
+      during scoring; the other player sees "I'm done answering" and gets
+      scored. Verified across two full rounds against live Firestore.
 - [x] **Leave game in progress.** `leaveGame()` in `src/lib/room.ts`; a
       "Leave" control now shows in the lobby and on every active-play
       screen. The other player's live listener resolves the room to
@@ -140,3 +155,9 @@ mainly shapes the "User accounts" decision below.
   render correctly, and the `customQuestions` collection now accepts
   writes after `firestore.rules` was republished — full add-a-question
   flow verified end-to-end against live Firestore.
+- **2026-09-01** — Fixed a game-mechanic bug: the question picker and the
+  answerer were the same player (so scoring never actually alternated who
+  was "in the hot seat"). Now the picker scores the other player, who
+  answers and earns points, and roles swap each round — see "Recently
+  shipped" above. Added TODO item to make "Leave game" a real button
+  instead of a small text link.

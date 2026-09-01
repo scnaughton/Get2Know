@@ -104,13 +104,17 @@ export default function RoomPage() {
             onChoose={(tier) => chooseTier(roomId, tier, room.usedQuestionIds)}
           />
         ) : (
-          <InlineNotice>Waiting for your partner to pick a question level…</InlineNotice>
+          <InlineNotice>Your partner is picking a question for you to answer…</InlineNotice>
         ))}
 
       {room.phase === "answering" && room.currentQuestion && (
         <div className="flex flex-col gap-4">
           <QuestionCard question={room.currentQuestion} />
           {isMyTurn ? (
+            <p className="text-center text-sm text-plum/60">
+              Listen in — once they&rsquo;re done, you&rsquo;ll score their answer.
+            </p>
+          ) : (
             <button
               type="button"
               onClick={() => finishAnswering(roomId)}
@@ -118,10 +122,6 @@ export default function RoomPage() {
             >
               I&rsquo;m done answering
             </button>
-          ) : (
-            <p className="text-center text-sm text-plum/60">
-              Listen in, then score them once they&rsquo;re done.
-            </p>
           )}
         </div>
       )}
@@ -130,16 +130,16 @@ export default function RoomPage() {
         <div className="flex flex-col gap-4">
           <QuestionCard question={room.currentQuestion} />
           {isMyTurn ? (
-            <InlineNotice>Your partner is scoring your answer…</InlineNotice>
-          ) : (
             <HeartRating
               answererName={
-                room.players.find((p) => p.id === room.currentTurnPlayerId)?.name ??
+                room.players.find((p) => p.id !== room.currentTurnPlayerId)?.name ??
                 "Your partner"
               }
               maxPoints={room.currentQuestion.maxPoints}
               onSubmit={(points) => submitScore(roomId, points, room)}
             />
+          ) : (
+            <InlineNotice>Your partner is scoring your answer…</InlineNotice>
           )}
         </div>
       )}

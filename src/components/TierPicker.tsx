@@ -31,7 +31,7 @@ export function TierPicker({ usedQuestionIds, onChoose }: TierPickerProps) {
   return (
     <div className="flex flex-col gap-4">
       <p className="text-center text-sm font-medium text-plum/70">
-        Your turn — pick how deep you want to go.
+        Your turn to ask — pick how deep your partner should go.
       </p>
       <div className="flex flex-col gap-3">
         {TIERS.map((tier) => {

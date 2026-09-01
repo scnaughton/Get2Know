@@ -128,11 +128,12 @@ export async function submitScore(roomId: string, points: number, room: Room): P
   if (!currentTurnPlayerId || !currentQuestion) {
     throw new Error("There's no active question to score right now.");
   }
-  const answerer = room.players.find((p) => p.id === currentTurnPlayerId);
+  // currentTurnPlayerId is the picker/asker for this round — the *other*
+  // player is the one who answered and is being scored.
+  const answerer = room.players.find((p) => p.id !== currentTurnPlayerId);
   if (!answerer) {
     throw new Error("Couldn't find the player who answered.");
   }
-  const nextPlayer = room.players.find((p) => p.id !== currentTurnPlayerId);
   const clampedPoints = Math.max(0, Math.min(points, currentQuestion.maxPoints));
 
   const updatedPlayers = room.players.map((p) =>
@@ -153,7 +154,9 @@ export async function submitScore(roomId: string, points: number, room: Room): P
     lastRound,
     phase: "reveal",
     currentQuestion: null,
-    currentTurnPlayerId: nextPlayer ? nextPlayer.id : currentTurnPlayerId,
+    // Roles swap next round: the player who just answered becomes the
+    // next picker/asker.
+    currentTurnPlayerId: answerer.id,
     roundNumber: room.roundNumber + 1,
   });
 }
