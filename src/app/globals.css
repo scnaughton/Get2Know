@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@theme {
+  --color-blush: #ff5d8f;
+  --color-plum: #4a1942;
+  --color-cream: #fff7f2;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-plum);
+}

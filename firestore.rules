@@ -1,0 +1,13 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Get2Know is a casual, code-based party game: anyone who knows a room's
+    // 5-character code can read/write that room's document. There is no
+    // authentication layer. This is fine for a lighthearted game shared
+    // between two people, but do NOT reuse this pattern for anything that
+    // holds sensitive data.
+    match /rooms/{roomId} {
+      allow read, write: if true;
+    }
+  }
+}
