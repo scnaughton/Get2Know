@@ -22,6 +22,18 @@ mainly shapes the "User accounts" decision below.
       "Deployment" below)
 - [ ] Re-enable Vercel Authentication (or replace with something lighter,
       like a password) once you're done sharing the public link for testing
+- [ ] **Hearts instead of a slider for scoring:** replace `ScoreSlider`'s
+      generic numeric range input with a heart-based rating. The point
+      system is fixed per tier (5/10/20), so this is a visual/interaction
+      change, not a scoring-logic change — and it reinforces the
+      intimacy/romance theme better than a raw number. Open questions:
+      - Hearts map 1:1 to points (up to 20 hearts for a Deep Dive
+        question) vs. a small fixed scale (e.g. 5 hearts) that scales up
+        to the tier's max points
+      - Tap-to-fill vs. drag, and whether partial/half-hearts are needed
+      - Extend the theme elsewhere too (e.g. heart-shaped tier icons,
+        "earned 3 hearts" copy instead of "8 points") so scoring language
+        stays consistent across the app
 - [ ] **Question management:** a way to see the full question bank and add
       your own questions, rather than only the 30 built-in ones. Open
       design questions to settle when this gets built:
@@ -102,3 +114,6 @@ mainly shapes the "User accounts" decision below.
 - **2026-09-01** — Decided product direction: standalone icebreaker tool,
   architected to be extensible toward a future dating platform without
   committing to build one now (see "Product direction" above).
+- **2026-09-01** — Added TODO item to replace the numeric score slider
+  with a heart-based rating, to better reinforce the intimacy/romance
+  theme.
