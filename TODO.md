@@ -10,6 +10,17 @@ features, decisions, or things deliberately left undone.
       "Deployment" below)
 - [ ] Re-enable Vercel Authentication (or replace with something lighter,
       like a password) once you're done sharing the public link for testing
+- [ ] **Question management:** a way to see the full question bank and add
+      your own questions, rather than only the 30 built-in ones. Open
+      design questions to settle when this gets built:
+      - Browse view: a page/panel listing all questions, filterable by
+        tier/category
+      - Add flow: a form to submit a new question (text, tier, category)
+      - Where custom questions live: bundled in code (like today, but
+        editable) vs. stored in Firestore (either global — shared by every
+        game — or per-room, so a pair can add their own before playing)
+      - Whether custom questions mix into the random draw alongside the
+        built-in 30, or are a separate pool
 
 ## Backlog / Ideas
 
@@ -19,7 +30,6 @@ features, decisions, or things deliberately left undone.
 - [ ] Add a "skip this question" option
 - [ ] Persist finished games (a simple match history / past scores)
 - [ ] Sound/haptics for score reveals
-- [ ] Custom/user-submitted questions
 - [ ] Automated tests (none yet — `npm run lint` + manual smoke tests are
       the current quality gate)
 
