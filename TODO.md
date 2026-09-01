@@ -21,6 +21,22 @@ features, decisions, or things deliberately left undone.
         game — or per-room, so a pair can add their own before playing)
       - Whether custom questions mix into the random draw alongside the
         built-in 30, or are a separate pool
+- [ ] **User accounts:** decide whether players get a permanent account or
+      stay ephemeral (enter a name each time, identity is just a
+      `localStorage` id scoped to one room — today's model). This decision
+      gates several backlog items above, since they need *someone* to
+      attach to:
+      - Ephemeral (today): zero friction, no sign-up, but no way to save a
+        personal question library, no cross-device continuity, no match
+        history tied to a person
+      - Permanent accounts: needs real auth (Firebase Auth — email/password,
+        Google sign-in, or a magic link) plus account-aware Firestore
+        rules, but unlocks a saved custom-question library, match history
+        across games/devices, and recognizing a returning partner
+      - Middle ground: a persistent display name/profile without full
+        login (e.g. a device-bound identity that survives across rooms,
+        not just one) — less work than full auth, still no cross-device
+        continuity
 
 ## Backlog / Ideas
 
