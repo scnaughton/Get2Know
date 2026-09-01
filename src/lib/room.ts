@@ -7,9 +7,8 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "./firebase";
-import { getAllCustomQuestions } from "./customQuestions";
-import { getRandomQuestion, TIER_POINTS } from "./questions";
-import type { LastRound, Player, Room, QuestionTier, RoundQuestion } from "./types";
+import { TIER_POINTS } from "./questions";
+import type { LastRound, Player, Question, Room, RoundQuestion } from "./types";
 
 const ROOM_CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/O/1/I — easy to read aloud
 const ROOM_CODE_LENGTH = 5;
@@ -101,17 +100,13 @@ export async function startGame(roomId: string, players: Player[]): Promise<void
   });
 }
 
-export async function chooseTier(
+/** Picker chose a specific question (browsed and picked, or a client-side "surprise me" pick). */
+export async function chooseQuestion(
   roomId: string,
-  tier: QuestionTier,
+  question: Question,
   usedQuestionIds: string[]
 ): Promise<void> {
-  const customQuestions = await getAllCustomQuestions();
-  const question = getRandomQuestion(tier, usedQuestionIds, customQuestions);
-  if (!question) {
-    throw new Error("No questions left at that level — try another one!");
-  }
-  const currentQuestion: RoundQuestion = { ...question, maxPoints: TIER_POINTS[tier] };
+  const currentQuestion: RoundQuestion = { ...question, maxPoints: TIER_POINTS[question.tier] };
   await updateDoc(doc(db, "rooms", roomId), {
     currentQuestion,
     usedQuestionIds: [...usedQuestionIds, question.id],

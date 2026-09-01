@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { CATEGORY_LABELS, QUESTIONS, TIER_LABELS } from "@/lib/questions";
 import { useCustomQuestions } from "@/hooks/useCustomQuestions";
 import { AddQuestionForm } from "@/components/AddQuestionForm";
+import { FilterButton } from "@/components/FilterButton";
 import type { Question, QuestionTier } from "@/lib/types";
 
 type TierFilter = QuestionTier | "all";
@@ -60,28 +61,6 @@ export default function QuestionsPage() {
         </ul>
       </div>
     </main>
-  );
-}
-
-function FilterButton({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold transition ${
-        active ? "bg-blush text-white shadow" : "bg-white text-plum/60 hover:bg-blush/10"
-      }`}
-    >
-      {children}
-    </button>
   );
 }
 

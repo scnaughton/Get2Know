@@ -74,15 +74,27 @@ mainly shapes the "User accounts" decision below.
       the old `ScoreSlider`: tap 0–5 hearts, each worth `maxPoints / 5`
       (1/2/4 pts per tier — divides evenly). Filled hearts also show on
       the round-reveal screen alongside the point total.
-- [x] **Question management.** New `/questions` page: browse the built-in
-      30 plus any custom ones, filterable by tier, with an add-question
-      form (text/tier/category). Custom questions live in a global
-      Firestore `customQuestions` collection (no accounts yet, so no
-      per-user library — schema leaves room for an `authorId` field
-      later without a rework) and mix into the random draw alongside the
-      built-in 30. `firestore.rules` covering `customQuestions` has been
-      published to the live `get2know-d3dca` project and verified
-      end-to-end (write/read/delete all succeed live).
+- [x] **Question management.** Two parts:
+      - A standalone `/questions` page: browse the built-in 30 plus any
+        custom ones, filterable by tier, with an add-question form
+        (text/tier/category) — for browsing/curating outside a game.
+      - **In-game picking**, added after initial feedback that browsing
+        and adding needed to happen *during* the "choosing" phase, not
+        only on a separate page: `QuestionPicker` (replacing the old
+        `TierPicker`) lets the asker browse/filter the live question bank
+        and tap a specific question to ask ("Ask this"), or hit "🎲
+        Surprise me" per tier for a quick random pick, or add a new
+        question inline without leaving the game. `chooseQuestion()` in
+        `src/lib/room.ts` sets whatever specific question was picked (the
+        old random-only `chooseTier()` path and its now-unused helpers
+        were removed).
+      - Custom questions live in a global Firestore `customQuestions`
+        collection (no accounts yet, so no per-user library — schema
+        leaves room for an `authorId` field later without a rework).
+        `firestore.rules` covering it has been published to the live
+        `get2know-d3dca` project and verified end-to-end (write/read/
+        delete all succeed live; explicit question selection verified
+        end-to-end too).
 
 ## Backlog / Ideas
 
@@ -161,3 +173,10 @@ mainly shapes the "User accounts" decision below.
   answers and earns points, and roles swap each round — see "Recently
   shipped" above. Added TODO item to make "Leave game" a real button
   instead of a small text link.
+- **2026-09-01** — Moved question browsing/adding into the game itself:
+  the "choosing" phase now uses `QuestionPicker` (replacing `TierPicker`)
+  so the asker can browse and pick a specific question, or add one on the
+  spot, without leaving the game. Standalone `/questions` page kept for
+  browsing/curating outside a game. Removed the now-dead random-per-tier
+  draw path (`chooseTier`, `getRandomQuestion`, `remainingCount`,
+  `getAllCustomQuestions`). Verified end-to-end against live Firestore.

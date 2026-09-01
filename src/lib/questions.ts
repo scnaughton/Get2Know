@@ -57,23 +57,3 @@ export const QUESTIONS: Question[] = [
   { id: "q29", tier: 3, category: "past-relationships", text: "What led your last relationship to end, and how do you feel about it now?" },
   { id: "q30", tier: 3, category: "deep", text: "What do you need from a partner when you're struggling, versus when you're doing well?" },
 ];
-
-export function getRandomQuestion(
-  tier: QuestionTier,
-  usedQuestionIds: string[],
-  extraQuestions: Question[] = []
-): Question | null {
-  const pool = [...QUESTIONS, ...extraQuestions];
-  const available = pool.filter((q) => q.tier === tier && !usedQuestionIds.includes(q.id));
-  if (available.length === 0) return null;
-  return available[Math.floor(Math.random() * available.length)];
-}
-
-export function remainingCount(
-  tier: QuestionTier,
-  usedQuestionIds: string[],
-  extraQuestions: Question[] = []
-): number {
-  const pool = [...QUESTIONS, ...extraQuestions];
-  return pool.filter((q) => q.tier === tier && !usedQuestionIds.includes(q.id)).length;
-}

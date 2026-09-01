@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useRoom } from "@/hooks/useRoom";
 import { usePlayerSession } from "@/hooks/usePlayerSession";
 import {
-  chooseTier,
+  chooseQuestion,
   continueToNextRound,
   endGame,
   finishAnswering,
@@ -17,7 +17,7 @@ import {
 import { JoinForm } from "@/components/JoinForm";
 import { Lobby } from "@/components/Lobby";
 import { Scoreboard } from "@/components/Scoreboard";
-import { TierPicker } from "@/components/TierPicker";
+import { QuestionPicker } from "@/components/QuestionPicker";
 import { QuestionCard } from "@/components/QuestionCard";
 import { HeartRating } from "@/components/HeartRating";
 import { RoundReveal } from "@/components/RoundReveal";
@@ -99,9 +99,9 @@ export default function RoomPage() {
 
       {room.phase === "choosing" &&
         (isMyTurn ? (
-          <TierPicker
+          <QuestionPicker
             usedQuestionIds={room.usedQuestionIds}
-            onChoose={(tier) => chooseTier(roomId, tier, room.usedQuestionIds)}
+            onChoose={(question) => chooseQuestion(roomId, question, room.usedQuestionIds)}
           />
         ) : (
           <InlineNotice>Your partner is picking a question for you to answer…</InlineNotice>
