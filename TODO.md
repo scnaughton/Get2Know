@@ -22,6 +22,19 @@ mainly shapes the "User accounts" decision below.
       "Deployment" below)
 - [ ] Re-enable Vercel Authentication (or replace with something lighter,
       like a password) once you're done sharing the public link for testing
+- [ ] **No way to leave a game in progress.** There's currently no
+      "Exit"/"Leave game" affordance during lobby/choosing/answering/
+      scoring — only "End game" on the reveal screen, or informally
+      closing the tab (which doesn't clean up the player's entry in
+      Firestore or tell their partner they left; the partner is just
+      stuck on a "waiting for..." screen). Needs:
+      - A visible leave/exit control during all in-game phases, not just
+        reveal
+      - Deciding what happens to the *other* player when someone leaves —
+        pause the game with a notice, auto-end it, or let them keep going
+        solo
+      - Cleaning up (or marking abandoned) the Firestore room doc so it
+        doesn't linger in a half-finished state
 - [ ] **Hearts instead of a slider for scoring:** replace `ScoreSlider`'s
       generic numeric range input with a heart-based rating. The point
       system is fixed per tier (5/10/20), so this is a visual/interaction
@@ -131,3 +144,6 @@ mainly shapes the "User accounts" decision below.
 - **2026-09-01** — Decided rooms stay ephemeral (fresh code per game) even
   for signed-in users; accounts hold identity/history, not a permanent
   room (see "User accounts" above).
+- **2026-09-01** — Added TODO item: no way to leave a game in progress
+  today (only "End game" on the reveal screen); needs a real exit
+  affordance and a decision on what happens to the other player.
