@@ -4,6 +4,18 @@ Tracks planned work, open follow-ups, and a running changelog for the
 project. Add to this file as part of any change worth remembering — new
 features, decisions, or things deliberately left undone.
 
+## Product direction
+
+**Decided 2026-09-01:** Get2Know is a **standalone icebreaker tool**, not
+the core of a dating platform. Two people who are already connected some
+other way (matched elsewhere, met in person, on a call) use it together —
+no profiles, discovery/matching, or in-app messaging planned. However,
+it's architected with room to plug into a bigger dating platform later
+*if* that direction is chosen — meaning real, extensible identity (not
+throwaway `localStorage` ids) and clean data boundaries, without building
+out platform-scale features (matching, discovery, moderation) now. This
+mainly shapes the "User accounts" decision below.
+
 ## Now / Next
 
 - [ ] Decide on GitHub + Vercel auto-deploy vs. manual redeploys (see
@@ -21,22 +33,20 @@ features, decisions, or things deliberately left undone.
         game — or per-room, so a pair can add their own before playing)
       - Whether custom questions mix into the random draw alongside the
         built-in 30, or are a separate pool
-- [ ] **User accounts:** decide whether players get a permanent account or
-      stay ephemeral (enter a name each time, identity is just a
-      `localStorage` id scoped to one room — today's model). This decision
-      gates several backlog items above, since they need *someone* to
-      attach to:
-      - Ephemeral (today): zero friction, no sign-up, but no way to save a
-        personal question library, no cross-device continuity, no match
-        history tied to a person
-      - Permanent accounts: needs real auth (Firebase Auth — email/password,
-        Google sign-in, or a magic link) plus account-aware Firestore
-        rules, but unlocks a saved custom-question library, match history
-        across games/devices, and recognizing a returning partner
-      - Middle ground: a persistent display name/profile without full
-        login (e.g. a device-bound identity that survives across rooms,
-        not just one) — less work than full auth, still no cross-device
-        continuity
+- [ ] **User accounts:** given the standalone-but-extensible direction
+      above, lean toward real (if lightweight) identity over throwaway
+      `localStorage` ids — e.g. Firebase Auth, starting anonymous and
+      upgradeable to email/Google later, rather than raw per-room ids.
+      Still open:
+      - Anonymous-by-default (frictionless, upgrade later) vs. requiring
+        sign-up up front
+      - What an account actually unlocks day one: a saved custom-question
+        library? cross-device match history? recognizing a returning
+        partner? or just the identity plumbing, with those features built
+        later
+      - Firestore rules/data model keyed by uid instead of ad-hoc player
+        objects, so this doesn't need a rework if a platform is built
+        around it later
 
 ## Backlog / Ideas
 
@@ -89,3 +99,6 @@ features, decisions, or things deliberately left undone.
 - **2026-08-31** — Deployed to Vercel production via direct file upload
   (no GitHub link yet). Disabled Vercel Authentication so the link is
   publicly playable.
+- **2026-09-01** — Decided product direction: standalone icebreaker tool,
+  architected to be extensible toward a future dating platform without
+  committing to build one now (see "Product direction" above).
