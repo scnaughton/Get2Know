@@ -49,6 +49,17 @@ mainly shapes the "User accounts" decision below.
       above, lean toward real (if lightweight) identity over throwaway
       `localStorage` ids — e.g. Firebase Auth, starting anonymous and
       upgradeable to email/Google later, rather than raw per-room ids.
+      **Decided 2026-09-01: rooms stay ephemeral even for signed-in
+      users** — a fresh 5-character room/code per game session, same as
+      today. The account is a separate, persistent identity (name, saved
+      question library, match history) that a player brings *into* a
+      room; it doesn't mean one fixed permanent room. Reasoning: a room
+      holds one playthrough's live state (turn order, running scores,
+      used questions) that needs to reset between games, and a player may
+      want to play with different partners or run simultaneous games —
+      neither works with one fixed room per account. Later, a signed-in
+      user's history view could let them re-launch a fresh room with a
+      past partner with one tap, instead of re-sharing a code by hand.
       Still open:
       - Anonymous-by-default (frictionless, upgrade later) vs. requiring
         sign-up up front
@@ -117,3 +128,6 @@ mainly shapes the "User accounts" decision below.
 - **2026-09-01** — Added TODO item to replace the numeric score slider
   with a heart-based rating, to better reinforce the intimacy/romance
   theme.
+- **2026-09-01** — Decided rooms stay ephemeral (fresh code per game) even
+  for signed-in users; accounts hold identity/history, not a permanent
+  room (see "User accounts" above).
