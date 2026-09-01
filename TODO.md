@@ -22,42 +22,6 @@ mainly shapes the "User accounts" decision below.
       "Deployment" below)
 - [ ] Re-enable Vercel Authentication (or replace with something lighter,
       like a password) once you're done sharing the public link for testing
-- [ ] **No way to leave a game in progress.** There's currently no
-      "Exit"/"Leave game" affordance during lobby/choosing/answering/
-      scoring — only "End game" on the reveal screen, or informally
-      closing the tab (which doesn't clean up the player's entry in
-      Firestore or tell their partner they left; the partner is just
-      stuck on a "waiting for..." screen). Needs:
-      - A visible leave/exit control during all in-game phases, not just
-        reveal
-      - Deciding what happens to the *other* player when someone leaves —
-        pause the game with a notice, auto-end it, or let them keep going
-        solo
-      - Cleaning up (or marking abandoned) the Firestore room doc so it
-        doesn't linger in a half-finished state
-- [ ] **Hearts instead of a slider for scoring:** replace `ScoreSlider`'s
-      generic numeric range input with a heart-based rating. The point
-      system is fixed per tier (5/10/20), so this is a visual/interaction
-      change, not a scoring-logic change — and it reinforces the
-      intimacy/romance theme better than a raw number. Open questions:
-      - Hearts map 1:1 to points (up to 20 hearts for a Deep Dive
-        question) vs. a small fixed scale (e.g. 5 hearts) that scales up
-        to the tier's max points
-      - Tap-to-fill vs. drag, and whether partial/half-hearts are needed
-      - Extend the theme elsewhere too (e.g. heart-shaped tier icons,
-        "earned 3 hearts" copy instead of "8 points") so scoring language
-        stays consistent across the app
-- [ ] **Question management:** a way to see the full question bank and add
-      your own questions, rather than only the 30 built-in ones. Open
-      design questions to settle when this gets built:
-      - Browse view: a page/panel listing all questions, filterable by
-        tier/category
-      - Add flow: a form to submit a new question (text, tier, category)
-      - Where custom questions live: bundled in code (like today, but
-        editable) vs. stored in Firestore (either global — shared by every
-        game — or per-room, so a pair can add their own before playing)
-      - Whether custom questions mix into the random draw alongside the
-        built-in 30, or are a separate pool
 - [ ] **User accounts:** given the standalone-but-extensible direction
       above, lean toward real (if lightweight) identity over throwaway
       `localStorage` ids — e.g. Firebase Auth, starting anonymous and
@@ -84,6 +48,31 @@ mainly shapes the "User accounts" decision below.
         objects, so this doesn't need a rework if a platform is built
         around it later
 
+## Recently shipped
+
+- [x] **Leave game in progress.** `leaveGame()` in `src/lib/room.ts`; a
+      "Leave" control now shows in the lobby and on every active-play
+      screen. The other player's live listener resolves the room to
+      "finished" and shows a "{name} left the game" results screen instead
+      of hanging on "waiting for...". Scores earned so far are preserved.
+- [x] **Hearts instead of a slider for scoring.** `HeartRating` replaces
+      the old `ScoreSlider`: tap 0–5 hearts, each worth `maxPoints / 5`
+      (1/2/4 pts per tier — divides evenly). Filled hearts also show on
+      the round-reveal screen alongside the point total.
+- [x] **Question management.** New `/questions` page: browse the built-in
+      30 plus any custom ones, filterable by tier, with an add-question
+      form (text/tier/category). Custom questions live in a global
+      Firestore `customQuestions` collection (no accounts yet, so no
+      per-user library — schema leaves room for an `authorId` field
+      later without a rework) and mix into the random draw alongside the
+      built-in 30.
+      - ⚠️ **Needs one manual step to actually work on the live site:**
+        `firestore.rules` was updated locally to cover the new
+        `customQuestions` collection, but that hasn't been published to
+        the `get2know-d3dca` Firebase console yet — same manual paste as
+        before (Firestore → Rules → paste `firestore.rules` → Publish).
+        Verified locally that writes are rejected until this is done.
+
 ## Backlog / Ideas
 
 - [ ] Support more than 2 players (would need group scoring rules and a
@@ -103,8 +92,10 @@ mainly shapes the "User accounts" decision below.
       (like your other Vercel projects), push this repo to GitHub and link
       it with Vercel's `create_git_project`.
 - [ ] **`firestore.rules` is wide open** (`allow read, write: if true` on
-      `/rooms/{roomId}`) — fine for a casual 2-player game with no
-      sensitive data, but revisit if the project grows.
+      both `/rooms/{roomId}` and `/customQuestions/{questionId}`) — fine
+      for a casual game with no sensitive data, but revisit if the
+      project grows (e.g. once accounts exist, restrict question writes
+      to signed-in players).
 - [ ] **No `package-lock.json` was included in the Vercel file deploy** —
       the live build resolved fresh dependency versions rather than the
       exact ones pinned locally. Once git-linked, this goes away (Vercel
@@ -147,3 +138,8 @@ mainly shapes the "User accounts" decision below.
 - **2026-09-01** — Added TODO item: no way to leave a game in progress
   today (only "End game" on the reveal screen); needs a real exit
   affordance and a decision on what happens to the other player.
+- **2026-09-01** — Built leave-game, hearts-based scoring, and question
+  management (browse + add, `/questions`) — see "Recently shipped" above.
+  Verified leave-game and the game lifecycle end-to-end against live
+  Firestore; question-add is verified locally but blocked live until
+  `firestore.rules` is republished (manual step, flagged above).
