@@ -180,3 +180,10 @@ mainly shapes the "User accounts" decision below.
   browsing/curating outside a game. Removed the now-dead random-per-tier
   draw path (`chooseTier`, `getRandomQuestion`, `remainingCount`,
   `getAllCustomQuestions`). Verified end-to-end against live Firestore.
+- **2026-09-01** — Fixed a UI bug reported as "the upper Create a game
+  button doesn't work": the home page had two near-identical buttons
+  (mode-switcher tab "Create a game" + submit button "Create game"), and
+  clicking the tab while already on the default "create" mode produced
+  no visible change at all — indistinguishable from broken. Relabeled the
+  tabs to "New Game" / "Have a Code?" so they read as clearly different
+  from the actual submit action.
