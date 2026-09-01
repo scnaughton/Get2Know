@@ -60,15 +60,20 @@ export const QUESTIONS: Question[] = [
 
 export function getRandomQuestion(
   tier: QuestionTier,
-  usedQuestionIds: string[]
+  usedQuestionIds: string[],
+  extraQuestions: Question[] = []
 ): Question | null {
-  const available = QUESTIONS.filter(
-    (q) => q.tier === tier && !usedQuestionIds.includes(q.id)
-  );
+  const pool = [...QUESTIONS, ...extraQuestions];
+  const available = pool.filter((q) => q.tier === tier && !usedQuestionIds.includes(q.id));
   if (available.length === 0) return null;
   return available[Math.floor(Math.random() * available.length)];
 }
 
-export function remainingCount(tier: QuestionTier, usedQuestionIds: string[]): number {
-  return QUESTIONS.filter((q) => q.tier === tier && !usedQuestionIds.includes(q.id)).length;
+export function remainingCount(
+  tier: QuestionTier,
+  usedQuestionIds: string[],
+  extraQuestions: Question[] = []
+): number {
+  const pool = [...QUESTIONS, ...extraQuestions];
+  return pool.filter((q) => q.tier === tier && !usedQuestionIds.includes(q.id)).length;
 }

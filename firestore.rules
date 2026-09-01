@@ -9,5 +9,12 @@ service cloud.firestore {
     match /rooms/{roomId} {
       allow read, write: if true;
     }
+
+    // Custom questions players add to the shared question bank (see the
+    // /questions page). Same open-access model as rooms above — no
+    // authentication layer yet.
+    match /customQuestions/{questionId} {
+      allow read, write: if true;
+    }
   }
 }

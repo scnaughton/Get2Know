@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { createRoom, joinRoom } from "@/lib/room";
 import { savePlayerSession } from "@/lib/session";
 
@@ -115,6 +116,13 @@ export default function HomePage() {
           {submitting ? "Just a sec…" : mode === "create" ? "Create game" : "Join game"}
         </button>
       </form>
+
+      <Link
+        href="/questions"
+        className="text-center text-sm font-medium text-plum/50 underline-offset-2 hover:text-plum/70 hover:underline"
+      >
+        Browse & add questions
+      </Link>
     </main>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { TIER_LABELS, TIER_POINTS, remainingCount } from "@/lib/questions";
+import { useCustomQuestions } from "@/hooks/useCustomQuestions";
 import type { QuestionTier } from "@/lib/types";
 
 const TIERS: QuestionTier[] = [1, 2, 3];
@@ -14,6 +15,7 @@ interface TierPickerProps {
 export function TierPicker({ usedQuestionIds, onChoose }: TierPickerProps) {
   const [pending, setPending] = useState<QuestionTier | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { questions: customQuestions } = useCustomQuestions();
 
   async function handleChoose(tier: QuestionTier) {
     setError(null);
@@ -33,7 +35,7 @@ export function TierPicker({ usedQuestionIds, onChoose }: TierPickerProps) {
       </p>
       <div className="flex flex-col gap-3">
         {TIERS.map((tier) => {
-          const left = remainingCount(tier, usedQuestionIds);
+          const left = remainingCount(tier, usedQuestionIds, customQuestions);
           return (
             <button
               key={tier}

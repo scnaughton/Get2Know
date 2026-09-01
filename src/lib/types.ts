@@ -14,6 +14,11 @@ export interface Question {
   tier: QuestionTier;
 }
 
+/** A player-submitted question, stored in Firestore alongside the built-in bank. */
+export interface CustomQuestion extends Question {
+  createdAt: number;
+}
+
 export interface RoundQuestion extends Question {
   maxPoints: number;
 }

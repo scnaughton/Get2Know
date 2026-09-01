@@ -7,6 +7,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "./firebase";
+import { getAllCustomQuestions } from "./customQuestions";
 import { getRandomQuestion, TIER_POINTS } from "./questions";
 import type { LastRound, Player, Room, QuestionTier, RoundQuestion } from "./types";
 
@@ -105,7 +106,8 @@ export async function chooseTier(
   tier: QuestionTier,
   usedQuestionIds: string[]
 ): Promise<void> {
-  const question = getRandomQuestion(tier, usedQuestionIds);
+  const customQuestions = await getAllCustomQuestions();
+  const question = getRandomQuestion(tier, usedQuestionIds, customQuestions);
   if (!question) {
     throw new Error("No questions left at that level — try another one!");
   }
