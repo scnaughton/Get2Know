@@ -65,13 +65,9 @@ mainly shapes the "User accounts" decision below.
       Firestore `customQuestions` collection (no accounts yet, so no
       per-user library — schema leaves room for an `authorId` field
       later without a rework) and mix into the random draw alongside the
-      built-in 30.
-      - ⚠️ **Needs one manual step to actually work on the live site:**
-        `firestore.rules` was updated locally to cover the new
-        `customQuestions` collection, but that hasn't been published to
-        the `get2know-d3dca` Firebase console yet — same manual paste as
-        before (Firestore → Rules → paste `firestore.rules` → Publish).
-        Verified locally that writes are rejected until this is done.
+      built-in 30. `firestore.rules` covering `customQuestions` has been
+      published to the live `get2know-d3dca` project and verified
+      end-to-end (write/read/delete all succeed live).
 
 ## Backlog / Ideas
 
@@ -140,6 +136,7 @@ mainly shapes the "User accounts" decision below.
   affordance and a decision on what happens to the other player.
 - **2026-09-01** — Built leave-game, hearts-based scoring, and question
   management (browse + add, `/questions`) — see "Recently shipped" above.
-  Verified leave-game and the game lifecycle end-to-end against live
-  Firestore; question-add is verified locally but blocked live until
-  `firestore.rules` is republished (manual step, flagged above).
+  Deployed to production and verified live: home + `/questions` pages
+  render correctly, and the `customQuestions` collection now accepts
+  writes after `firestore.rules` was republished — full add-a-question
+  flow verified end-to-end against live Firestore.
