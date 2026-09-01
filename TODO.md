@@ -101,6 +101,13 @@ mainly shapes the "User accounts" decision below.
       that room's game via the same `usedQuestionIds` mechanism as an
       already-asked question — removed from the pool for both players,
       global question bank untouched. Verified against live Firestore.
+- [x] **Selectable question count (5/10/20).** A "Number of questions"
+      selector on the create-game form sets `totalRounds` on the room;
+      the lobby and active-play screen show it, and the last round's
+      reveal screen shows "See final results" instead of "Next round"
+      once `roundNumber > totalRounds` — the game concludes naturally
+      instead of continuing indefinitely. Verified against live
+      Firestore.
 
 ## Backlog / Ideas
 
@@ -196,3 +203,8 @@ mainly shapes the "User accounts" decision below.
   a × on each question in `QuestionPicker` dismisses it from that room's
   pool (same mechanism as an already-asked question) without affecting
   the global bank. Verified against live Firestore.
+- **2026-09-01** — Added a selectable question count (5/10/20) at game
+  creation (`totalRounds` on the room) so games conclude naturally
+  instead of running indefinitely; last-round reveal now offers "See
+  final results" instead of "Next round". Verified against live
+  Firestore.
