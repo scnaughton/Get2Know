@@ -163,3 +163,11 @@ export async function continueToNextRound(roomId: string): Promise<void> {
 export async function endGame(roomId: string): Promise<void> {
   await updateDoc(doc(db, "rooms", roomId), { status: "finished", phase: "finished" });
 }
+
+export async function leaveGame(roomId: string, playerName: string): Promise<void> {
+  await updateDoc(doc(db, "rooms", roomId), {
+    status: "finished",
+    phase: "finished",
+    leftByName: playerName,
+  });
+}

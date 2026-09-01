@@ -54,4 +54,6 @@ export interface Room {
   usedQuestionIds: string[];
   lastRound: LastRound | null;
   roundNumber: number;
+  /** Name of the player who left early, if the game ended that way rather than via "End game". */
+  leftByName?: string | null;
 }

@@ -4,9 +4,10 @@ import type { Player } from "@/lib/types";
 interface FinalResultsProps {
   players: Player[];
   myPlayerId: string;
+  leftByName?: string | null;
 }
 
-export function FinalResults({ players, myPlayerId }: FinalResultsProps) {
+export function FinalResults({ players, myPlayerId, leftByName }: FinalResultsProps) {
   const sorted = [...players].sort((a, b) => b.score - a.score);
   const [leader, runnerUp] = sorted;
   const isTie = leader && runnerUp && leader.score === runnerUp.score;
@@ -14,11 +15,15 @@ export function FinalResults({ players, myPlayerId }: FinalResultsProps) {
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center gap-8 px-6 py-12 text-center">
       <div>
-        <h1 className="text-3xl font-bold text-blush">Game over!</h1>
+        <h1 className="text-3xl font-bold text-blush">
+          {leftByName ? `${leftByName} left the game` : "Game over!"}
+        </h1>
         <p className="mt-2 text-sm text-plum/70">
-          {isTie
-            ? "It's a tie — looks like you're evenly matched."
-            : `${leader.name} wins this round of getting to know each other!`}
+          {leftByName
+            ? "The game ended early. Here's how it stood."
+            : isTie
+              ? "It's a tie — looks like you're evenly matched."
+              : `${leader.name} wins this round of getting to know each other!`}
         </p>
       </div>
 

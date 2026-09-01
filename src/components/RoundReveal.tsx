@@ -1,8 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { CATEGORY_LABELS, TIER_LABELS } from "@/lib/questions";
+import { CATEGORY_LABELS, TIER_LABELS, TIER_POINTS } from "@/lib/questions";
+import { HeartIcon } from "@/components/HeartIcon";
 import type { LastRound } from "@/lib/types";
+
+const HEART_COUNT = 5;
 
 interface RoundRevealProps {
   lastRound: LastRound;
@@ -13,6 +16,8 @@ interface RoundRevealProps {
 export function RoundReveal({ lastRound, onNextRound, onEndGame }: RoundRevealProps) {
   const [pending, setPending] = useState<"next" | "end" | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const pointsPerHeart = TIER_POINTS[lastRound.tier] / HEART_COUNT;
+  const heartsEarned = Math.round(lastRound.points / pointsPerHeart);
 
   async function handle(action: "next" | "end") {
     setError(null);
@@ -34,6 +39,11 @@ export function RoundReveal({ lastRound, onNextRound, onEndGame }: RoundRevealPr
         <span className="rounded-full bg-blush/10 px-3 py-1">{TIER_LABELS[lastRound.tier]}</span>
       </div>
       <p className="italic text-plum/70">&ldquo;{lastRound.questionText}&rdquo;</p>
+      <div className="flex justify-center gap-1">
+        {Array.from({ length: HEART_COUNT }, (_, index) => (
+          <HeartIcon key={index} filled={index < heartsEarned} size={28} />
+        ))}
+      </div>
       <p className="text-lg text-plum">
         <span className="font-semibold">{lastRound.answererName}</span> earned{" "}
         <span className="text-2xl font-bold text-blush">{lastRound.points}</span> points

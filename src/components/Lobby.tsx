@@ -8,9 +8,10 @@ interface LobbyProps {
   players: Player[];
   myPlayerId: string;
   onStart: () => Promise<void>;
+  onLeave: () => void;
 }
 
-export function Lobby({ roomCode, players, myPlayerId, onStart }: LobbyProps) {
+export function Lobby({ roomCode, players, myPlayerId, onStart, onLeave }: LobbyProps) {
   const [starting, setStarting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const canStart = players.length >= 2;
@@ -58,6 +59,14 @@ export function Lobby({ roomCode, players, myPlayerId, onStart }: LobbyProps) {
         className="rounded-xl bg-blush py-3 text-base font-semibold text-white shadow-md transition hover:opacity-90 disabled:opacity-50"
       >
         {starting ? "Starting…" : canStart ? "Start game" : "Waiting for players…"}
+      </button>
+
+      <button
+        type="button"
+        onClick={onLeave}
+        className="text-sm font-medium text-plum/50 underline-offset-2 transition hover:text-plum/70 hover:underline"
+      >
+        Leave lobby
       </button>
     </main>
   );
