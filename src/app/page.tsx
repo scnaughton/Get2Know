@@ -68,7 +68,7 @@ export default function HomePage() {
             mode === "create" ? "bg-blush text-white shadow" : "text-plum/60"
           }`}
         >
-          Create a game
+          New Game
         </button>
         <button
           type="button"
@@ -77,7 +77,7 @@ export default function HomePage() {
             mode === "join" ? "bg-blush text-white shadow" : "text-plum/60"
           }`}
         >
-          Join a game
+          Have a Code?
         </button>
       </div>
 
