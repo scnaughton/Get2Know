@@ -8,11 +8,14 @@ import { savePlayerSession } from "@/lib/session";
 
 type Mode = "create" | "join";
 
+const ROUND_OPTIONS = [5, 10, 20] as const;
+
 export default function HomePage() {
   const router = useRouter();
   const [mode, setMode] = useState<Mode>("create");
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
+  const [totalRounds, setTotalRounds] = useState<number>(10);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -29,7 +32,7 @@ export default function HomePage() {
     setSubmitting(true);
     try {
       if (mode === "create") {
-        const { roomId, playerId } = await createRoom(trimmedName);
+        const { roomId, playerId } = await createRoom(trimmedName, totalRounds);
         savePlayerSession(roomId, { playerId, name: trimmedName });
         router.push(`/room/${roomId}`);
         return;
@@ -104,6 +107,28 @@ export default function HomePage() {
               className="rounded-xl border border-plum/10 bg-white px-4 py-3 text-base uppercase tracking-widest text-plum shadow-sm outline-none focus:border-blush"
             />
           </label>
+        )}
+
+        {mode === "create" && (
+          <div className="flex flex-col gap-1 text-sm font-medium text-plum/80">
+            Number of questions
+            <div className="flex gap-2">
+              {ROUND_OPTIONS.map((count) => (
+                <button
+                  key={count}
+                  type="button"
+                  onClick={() => setTotalRounds(count)}
+                  className={`flex-1 rounded-xl py-2 text-sm font-semibold transition ${
+                    totalRounds === count
+                      ? "bg-blush text-white shadow"
+                      : "bg-white text-plum/60 shadow-sm hover:bg-blush/10"
+                  }`}
+                >
+                  {count}
+                </button>
+              ))}
+            </div>
+          </div>
         )}
 
         {error && <p className="text-sm text-red-500">{error}</p>}

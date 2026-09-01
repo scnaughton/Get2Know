@@ -36,7 +36,8 @@ async function generateUniqueRoomCode(): Promise<string> {
 }
 
 export async function createRoom(
-  hostName: string
+  hostName: string,
+  totalRounds: number
 ): Promise<{ roomId: string; playerId: string }> {
   const code = await generateUniqueRoomCode();
   const playerId = generatePlayerId();
@@ -51,6 +52,7 @@ export async function createRoom(
     usedQuestionIds: [],
     lastRound: null,
     roundNumber: 0,
+    totalRounds,
   };
 
   await setDoc(doc(db, "rooms", code), {

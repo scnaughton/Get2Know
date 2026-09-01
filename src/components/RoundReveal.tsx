@@ -9,11 +9,12 @@ const HEART_COUNT = 5;
 
 interface RoundRevealProps {
   lastRound: LastRound;
+  isLastRound: boolean;
   onNextRound: () => Promise<void>;
   onEndGame: () => Promise<void>;
 }
 
-export function RoundReveal({ lastRound, onNextRound, onEndGame }: RoundRevealProps) {
+export function RoundReveal({ lastRound, isLastRound, onNextRound, onEndGame }: RoundRevealProps) {
   const [pending, setPending] = useState<"next" | "end" | null>(null);
   const [error, setError] = useState<string | null>(null);
   const pointsPerHeart = TIER_POINTS[lastRound.tier] / HEART_COUNT;
@@ -50,22 +51,35 @@ export function RoundReveal({ lastRound, onNextRound, onEndGame }: RoundRevealPr
       </p>
       {error && <p className="text-sm text-red-500">{error}</p>}
       <div className="flex flex-col gap-2">
-        <button
-          type="button"
-          onClick={() => handle("next")}
-          disabled={pending !== null}
-          className="rounded-xl bg-blush py-3 text-base font-semibold text-white shadow-md transition hover:opacity-90 disabled:opacity-50"
-        >
-          {pending === "next" ? "Loading…" : "Next round"}
-        </button>
-        <button
-          type="button"
-          onClick={() => handle("end")}
-          disabled={pending !== null}
-          className="rounded-xl border border-plum/10 bg-transparent py-3 text-sm font-medium text-plum/60 transition hover:bg-plum/5 disabled:opacity-50"
-        >
-          {pending === "end" ? "Ending…" : "End game"}
-        </button>
+        {isLastRound ? (
+          <button
+            type="button"
+            onClick={() => handle("end")}
+            disabled={pending !== null}
+            className="rounded-xl bg-blush py-3 text-base font-semibold text-white shadow-md transition hover:opacity-90 disabled:opacity-50"
+          >
+            {pending === "end" ? "Finishing…" : "See final results"}
+          </button>
+        ) : (
+          <>
+            <button
+              type="button"
+              onClick={() => handle("next")}
+              disabled={pending !== null}
+              className="rounded-xl bg-blush py-3 text-base font-semibold text-white shadow-md transition hover:opacity-90 disabled:opacity-50"
+            >
+              {pending === "next" ? "Loading…" : "Next round"}
+            </button>
+            <button
+              type="button"
+              onClick={() => handle("end")}
+              disabled={pending !== null}
+              className="rounded-xl border border-plum/10 bg-transparent py-3 text-sm font-medium text-plum/60 transition hover:bg-plum/5 disabled:opacity-50"
+            >
+              {pending === "end" ? "Ending…" : "End game"}
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

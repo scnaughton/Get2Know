@@ -59,6 +59,8 @@ export interface Room {
   usedQuestionIds: string[];
   lastRound: LastRound | null;
   roundNumber: number;
+  /** How many questions this game runs for, chosen at creation (5, 10, or 20). */
+  totalRounds: number;
   /** Name of the player who left early, if the game ended that way rather than via "End game". */
   leftByName?: string | null;
 }

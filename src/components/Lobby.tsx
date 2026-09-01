@@ -7,11 +7,12 @@ interface LobbyProps {
   roomCode: string;
   players: Player[];
   myPlayerId: string;
+  totalRounds: number;
   onStart: () => Promise<void>;
   onLeave: () => void;
 }
 
-export function Lobby({ roomCode, players, myPlayerId, onStart, onLeave }: LobbyProps) {
+export function Lobby({ roomCode, players, myPlayerId, totalRounds, onStart, onLeave }: LobbyProps) {
   const [starting, setStarting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const canStart = players.length >= 2;
@@ -33,6 +34,9 @@ export function Lobby({ roomCode, players, myPlayerId, onStart, onLeave }: Lobby
         <p className="text-sm font-medium uppercase tracking-wide text-plum/50">Room code</p>
         <p className="font-mono text-5xl font-bold tracking-widest text-blush">{roomCode}</p>
         <p className="mt-2 text-sm text-plum/70">Share this code with your partner to join.</p>
+        <p className="mt-1 text-xs font-medium uppercase tracking-wide text-plum/40">
+          {totalRounds} questions
+        </p>
       </div>
 
       <div className="flex flex-col gap-2 rounded-2xl bg-white/70 p-5 shadow-sm">

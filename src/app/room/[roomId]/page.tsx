@@ -73,6 +73,7 @@ export default function RoomPage() {
         roomCode={roomId}
         players={room.players}
         myPlayerId={myPlayerId}
+        totalRounds={room.totalRounds}
         onStart={() => startGame(roomId, room.players)}
         onLeave={handleLeave}
       />
@@ -96,7 +97,12 @@ export default function RoomPage() {
           Leave game
         </button>
       </div>
-      <Scoreboard players={room.players} myPlayerId={myPlayerId} roomCode={roomId} />
+      <div className="flex flex-col gap-1">
+        <Scoreboard players={room.players} myPlayerId={myPlayerId} roomCode={roomId} />
+        <p className="text-center text-xs font-medium uppercase tracking-wide text-plum/40">
+          Round {Math.min(room.roundNumber, room.totalRounds)} of {room.totalRounds}
+        </p>
+      </div>
 
       {room.phase === "choosing" &&
         (isMyTurn ? (
@@ -149,6 +155,7 @@ export default function RoomPage() {
       {room.phase === "reveal" && room.lastRound && (
         <RoundReveal
           lastRound={room.lastRound}
+          isLastRound={room.roundNumber > room.totalRounds}
           onNextRound={() => continueToNextRound(roomId)}
           onEndGame={() => endGame(roomId)}
         />
