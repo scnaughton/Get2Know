@@ -95,13 +95,18 @@ mainly shapes the "User accounts" decision below.
         `get2know-d3dca` project and verified end-to-end (write/read/
         delete all succeed live; explicit question selection verified
         end-to-end too).
+- [x] **Remove unwanted questions from the game.** A small × next to each
+      question in `QuestionPicker` calls `dismissQuestion()`
+      (`src/lib/room.ts`), which marks it unavailable for the rest of
+      that room's game via the same `usedQuestionIds` mechanism as an
+      already-asked question — removed from the pool for both players,
+      global question bank untouched. Verified against live Firestore.
 
 ## Backlog / Ideas
 
 - [ ] Support more than 2 players (would need group scoring rules and a
       redesigned turn order)
 - [ ] Let the answerer pick a category, not just a tier
-- [ ] Add a "skip this question" option
 - [ ] Persist finished games (a simple match history / past scores)
 - [ ] Sound/haptics for score reveals
 - [ ] Automated tests (none yet — `npm run lint` + manual smoke tests are
@@ -187,3 +192,7 @@ mainly shapes the "User accounts" decision below.
   no visible change at all — indistinguishable from broken. Relabeled the
   tabs to "New Game" / "Have a Code?" so they read as clearly different
   from the actual submit action.
+- **2026-09-01** — Added a way to remove unwanted questions from a game:
+  a × on each question in `QuestionPicker` dismisses it from that room's
+  pool (same mechanism as an already-asked question) without affecting
+  the global bank. Verified against live Firestore.
