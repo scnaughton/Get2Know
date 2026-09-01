@@ -7,6 +7,7 @@ import { usePlayerSession } from "@/hooks/usePlayerSession";
 import {
   chooseQuestion,
   continueToNextRound,
+  dismissQuestion,
   endGame,
   finishAnswering,
   joinRoom,
@@ -102,6 +103,7 @@ export default function RoomPage() {
           <QuestionPicker
             usedQuestionIds={room.usedQuestionIds}
             onChoose={(question) => chooseQuestion(roomId, question, room.usedQuestionIds)}
+            onDismiss={(questionId) => dismissQuestion(roomId, questionId, room.usedQuestionIds)}
           />
         ) : (
           <InlineNotice>Your partner is picking a question for you to answer…</InlineNotice>

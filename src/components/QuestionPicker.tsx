@@ -20,12 +20,14 @@ function pickRandom<T>(items: T[]): T {
 interface QuestionPickerProps {
   usedQuestionIds: string[];
   onChoose: (question: Question) => Promise<void>;
+  onDismiss: (questionId: string) => Promise<void>;
 }
 
-export function QuestionPicker({ usedQuestionIds, onChoose }: QuestionPickerProps) {
+export function QuestionPicker({ usedQuestionIds, onChoose, onDismiss }: QuestionPickerProps) {
   const [filter, setFilter] = useState<TierFilter>("all");
   const [showAddForm, setShowAddForm] = useState(false);
   const [pendingId, setPendingId] = useState<string | null>(null);
+  const [dismissingIds, setDismissingIds] = useState<Set<string>>(new Set());
   const [error, setError] = useState<string | null>(null);
   const { questions: customQuestions } = useCustomQuestions();
 
@@ -58,6 +60,24 @@ export function QuestionPicker({ usedQuestionIds, onChoose }: QuestionPickerProp
     void handleChoose(pickRandom(pool));
   }
 
+  async function handleDismiss(questionId: string) {
+    setError(null);
+    setDismissingIds((prev) => new Set(prev).add(questionId));
+    try {
+      await onDismiss(questionId);
+      // On success the question drops out of `available` once the room's
+      // usedQuestionIds prop updates via the live listener — no need to
+      // clear it from dismissingIds, the row just unmounts.
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Couldn't remove that question.");
+      setDismissingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(questionId);
+        return next;
+      });
+    }
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <p className="text-center text-sm font-medium text-plum/70">
@@ -82,31 +102,45 @@ export function QuestionPicker({ usedQuestionIds, onChoose }: QuestionPickerProp
           </p>
         )}
         {visible.map((question) => (
-          <button
+          <div
             key={question.id}
-            type="button"
-            onClick={() => handleChoose(question)}
-            disabled={pendingId !== null}
-            className="flex items-start justify-between gap-3 rounded-xl bg-white px-4 py-3 text-left shadow-sm transition hover:shadow-md disabled:opacity-50"
+            className="flex items-start gap-2 rounded-xl bg-white px-4 py-3 shadow-sm transition hover:shadow-md"
           >
-            <div className="flex flex-col gap-1">
-              <div className="flex flex-wrap gap-1 text-[10px] font-semibold uppercase tracking-wide text-blush/80">
-                <span className="rounded-full bg-blush/10 px-2 py-0.5">
-                  {TIER_LABELS[question.tier]}
-                </span>
-                <span className="rounded-full bg-blush/10 px-2 py-0.5">
-                  {CATEGORY_LABELS[question.category]}
-                </span>
-                <span className="rounded-full bg-blush/10 px-2 py-0.5">
-                  {TIER_POINTS[question.tier]} pts
-                </span>
+            <button
+              type="button"
+              onClick={() => handleChoose(question)}
+              disabled={pendingId !== null || dismissingIds.has(question.id)}
+              className="flex flex-1 items-start justify-between gap-3 text-left disabled:opacity-50"
+            >
+              <div className="flex flex-col gap-1">
+                <div className="flex flex-wrap gap-1 text-[10px] font-semibold uppercase tracking-wide text-blush/80">
+                  <span className="rounded-full bg-blush/10 px-2 py-0.5">
+                    {TIER_LABELS[question.tier]}
+                  </span>
+                  <span className="rounded-full bg-blush/10 px-2 py-0.5">
+                    {CATEGORY_LABELS[question.category]}
+                  </span>
+                  <span className="rounded-full bg-blush/10 px-2 py-0.5">
+                    {TIER_POINTS[question.tier]} pts
+                  </span>
+                </div>
+                <p className="text-sm text-plum">{question.text}</p>
               </div>
-              <p className="text-sm text-plum">{question.text}</p>
-            </div>
-            <span className="shrink-0 rounded-full bg-blush px-3 py-1 text-xs font-bold text-white">
-              {pendingId === question.id ? "…" : "Ask this"}
-            </span>
-          </button>
+              <span className="shrink-0 rounded-full bg-blush px-3 py-1 text-xs font-bold text-white">
+                {pendingId === question.id ? "…" : "Ask this"}
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleDismiss(question.id)}
+              disabled={dismissingIds.has(question.id)}
+              aria-label={`Remove "${question.text}" from this game`}
+              title="Not this one — remove it from this game"
+              className="shrink-0 rounded-full px-2 py-1 text-lg leading-none text-plum/30 transition hover:bg-plum/10 hover:text-plum/60 disabled:opacity-30"
+            >
+              ×
+            </button>
+          </div>
         ))}
       </div>
 

@@ -114,6 +114,21 @@ export async function chooseQuestion(
   });
 }
 
+/**
+ * Marks a question as unavailable for the rest of this game without asking
+ * it — same mechanism as "already asked" (adds to usedQuestionIds), so it
+ * drops out of the pool for both players, not just the one who dismissed it.
+ */
+export async function dismissQuestion(
+  roomId: string,
+  questionId: string,
+  usedQuestionIds: string[]
+): Promise<void> {
+  await updateDoc(doc(db, "rooms", roomId), {
+    usedQuestionIds: [...usedQuestionIds, questionId],
+  });
+}
+
 export async function finishAnswering(roomId: string): Promise<void> {
   await updateDoc(doc(db, "rooms", roomId), { phase: "scoring" });
 }
