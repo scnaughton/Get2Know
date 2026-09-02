@@ -77,12 +77,17 @@ mainly shapes the "User accounts" decision below.
       both players privately pick via the new `RockPaperScissors`
       component, `room.rpsChoices` (keyed by player id) holds the picks.
       Winner resolution and tie detection happen client-side from the two
-      stored choices (no extra Firestore field needed) — a tie shows
-      "Play again" (`playAgainRps()`, clears choices for a rematch), a
-      decisive result shows both picks + "Continue"
-      (`advanceAfterRps()`, sets `currentTurnPlayerId` to the winner and
-      moves to `"choosing"`). Verified against live Firestore (both a tie
-      and a win path).
+      stored choices (no extra Firestore field needed) — a decisive
+      result shows both picks + "Continue" (`advanceAfterRps()`, sets
+      `currentTurnPlayerId` to the winner and moves to `"choosing"`).
+      Verified against live Firestore (both a tie and a win path).
+- [x] **Ties auto-replay instead of requiring a tap.** A tie briefly
+      shows "It's a tie!" then automatically calls `playAgainRps()`
+      (clears `rpsChoices`) after 1.4s via a `useEffect` timeout in
+      `RockPaperScissors` — no button, it just keeps re-rolling until
+      someone actually wins so the game can begin. Either client's
+      timeout can fire the reset; a near-simultaneous duplicate call from
+      both clients is a harmless idempotent clear.
 - [x] **"+ Add your own question" is now a real button.** Was a small
       underlined text toggle in `QuestionPicker` — replaced with a
       properly sized, blush-bordered button
@@ -297,3 +302,13 @@ mainly shapes the "User accounts" decision below.
   Vercel account on the team, which defeats casually sharing a game link.
   User decided to leave the site public for now rather than build a
   custom app-level password gate — see "Now / Next" above.
+- **2026-09-02** — Fixed production Firestore connectivity: git-linked
+  builds had no `NEXT_PUBLIC_FIREBASE_*` env vars (only ever included in
+  the old manual `deploy_to_vercel` payloads, never committed since
+  `.env.production` is gitignored), causing "client is offline" errors
+  and games failing to start. User added the vars in Vercel project
+  settings; verified live that the Firebase config now reaches the
+  client bundle.
+- **2026-09-02** — Rock-paper-scissors ties now auto-replay (no tap
+  needed) instead of requiring a manual "Play again" — see "Recently
+  shipped" above.

@@ -1,7 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { RPSChoice } from "@/lib/types";
+
+// How long to show "It's a tie!" before automatically re-rolling.
+const TIE_REPLAY_DELAY_MS = 1400;
 
 const CHOICES: { value: RPSChoice; emoji: string; label: string }[] = [
   { value: "rock", emoji: "🪨", label: "Rock" },
@@ -53,6 +56,18 @@ export function RockPaperScissors({
         : opponentId
       : null;
 
+  // Ties re-roll automatically — no one has to tap anything, it just keeps
+  // going until someone actually wins. Either player's client can trigger
+  // the reset (playAgainRps is a no-op-safe clear), so a duplicate call
+  // from both clients firing around the same time is harmless.
+  useEffect(() => {
+    if (!isTie) return;
+    const timeout = setTimeout(() => {
+      void onPlayAgain();
+    }, TIE_REPLAY_DELAY_MS);
+    return () => clearTimeout(timeout);
+  }, [isTie, onPlayAgain]);
+
   async function handleChoose(choice: RPSChoice) {
     setError(null);
     setSubmitting(true);
@@ -64,15 +79,12 @@ export function RockPaperScissors({
     }
   }
 
-  async function handleAdvance() {
+  async function handleContinue() {
+    if (!winnerId) return;
     setError(null);
     setSubmitting(true);
     try {
-      if (isTie) {
-        await onPlayAgain();
-      } else if (winnerId) {
-        await onContinue(winnerId);
-      }
+      await onContinue(winnerId);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
       setSubmitting(false);
@@ -134,14 +146,18 @@ export function RockPaperScissors({
             : `${opponentName} wins — they ask first!`}
       </p>
       {error && <p className="text-sm text-red-500">{error}</p>}
-      <button
-        type="button"
-        onClick={handleAdvance}
-        disabled={submitting}
-        className="rounded-xl bg-blush py-3 text-base font-semibold text-white shadow-md transition hover:opacity-90 disabled:opacity-50"
-      >
-        {submitting ? "…" : isTie ? "Play again" : "Continue"}
-      </button>
+      {isTie ? (
+        <p className="text-sm text-plum/50">Rolling again…</p>
+      ) : (
+        <button
+          type="button"
+          onClick={handleContinue}
+          disabled={submitting}
+          className="rounded-xl bg-blush py-3 text-base font-semibold text-white shadow-md transition hover:opacity-90 disabled:opacity-50"
+        >
+          {submitting ? "…" : "Continue"}
+        </button>
+      )}
     </div>
   );
 }
