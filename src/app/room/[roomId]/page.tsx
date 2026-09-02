@@ -92,7 +92,7 @@ export default function RoomPage() {
         <button
           type="button"
           onClick={handleLeave}
-          className="text-xs font-medium text-plum/40 underline-offset-2 transition hover:text-plum/60 hover:underline"
+          className="rounded-lg border-2 border-red-200 bg-white px-4 py-2 text-sm font-semibold text-red-500 shadow-sm transition hover:bg-red-50"
         >
           Leave game
         </button>

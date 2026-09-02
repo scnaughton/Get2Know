@@ -45,10 +45,11 @@ mainly shapes the "User accounts" decision below.
         the others
 - [ ] **Make "+ Add your own question" a real, visible button.** It's
       currently a small underlined text toggle in `QuestionPicker`
-      (`src/components/QuestionPicker.tsx`) — easy to miss, same issue as
-      the "Leave game" link below. Needs a proper button size and a color
-      that stands out (not the muted `text-plum/50` treatment it has
-      today) so players actually notice they can add a question mid-game.
+      (`src/components/QuestionPicker.tsx`) — easy to miss. Needs a proper
+      button size and a color that stands out (not the muted
+      `text-plum/50` treatment it has today) so players actually notice
+      they can add a question mid-game. ("Leave game" got this same
+      treatment already — see "Recently shipped" below.)
 - [ ] **Rock-paper-scissors to decide who asks first.** Right now the
       first asker is just whoever created the room (`players[0]`,
       `startGame()` in `src/lib/room.ts`). Requested: open every game with
@@ -78,10 +79,6 @@ mainly shapes the "User accounts" decision below.
         it can be adjusted.
 - [ ] Decide on GitHub + Vercel auto-deploy vs. manual redeploys (see
       "Deployment" below)
-- [ ] **Make "Leave game" a clearly visible button**, not the small
-      underlined text link it is today (in `Lobby` and the active-play
-      header in `src/app/room/[roomId]/page.tsx`). It's easy to miss at
-      its current size/weight.
 - [ ] Re-enable Vercel Authentication (or replace with something lighter,
       like a password) once you're done sharing the public link for testing
 - [ ] **User accounts:** given the standalone-but-extensible direction
@@ -112,6 +109,11 @@ mainly shapes the "User accounts" decision below.
 
 ## Recently shipped
 
+- [x] **"Leave game" is now a real button.** Was a small underlined text
+      link in both `Lobby` (lobby screen) and the active-play header in
+      `src/app/room/[roomId]/page.tsx` — replaced with a properly sized,
+      red-bordered button (`border-2 border-red-200`, `text-red-500`) in
+      both places so it's clearly visible rather than easy to miss.
 - [x] **Fixed turn-order bug: picker and answerer were the same person.**
       The player who chose the question tier was also the one prompted to
       answer it and earn the points — the other player only ever scored,
@@ -285,3 +287,6 @@ mainly shapes the "User accounts" decision below.
   category and surfacing the existing (but currently unselectable)
   Trivia category. Clarified the tier-vs-category terminology mismatch in
   the request for whoever builds it.
+- **2026-09-02** — Made "Leave game" a real button (red-bordered, proper
+  size) in both the lobby and active-play screens, replacing the small
+  text link — closes out the item that had been sitting in Now/Next.

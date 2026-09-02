@@ -68,7 +68,7 @@ export function Lobby({ roomCode, players, myPlayerId, totalRounds, onStart, onL
       <button
         type="button"
         onClick={onLeave}
-        className="text-sm font-medium text-plum/50 underline-offset-2 transition hover:text-plum/70 hover:underline"
+        className="rounded-xl border-2 border-red-200 bg-white py-3 text-base font-semibold text-red-500 shadow-sm transition hover:bg-red-50"
       >
         Leave lobby
       </button>
