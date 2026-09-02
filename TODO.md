@@ -17,8 +17,15 @@ out platform-scale features (matching, discovery, moderation) now. This
 mainly shapes the "User accounts" decision below.
 
 ## Now / Next
-- [ ] Re-enable Vercel Authentication (or replace with something lighter,
-      like a password) once you're done sharing the public link for testing
+- [ ] **Access protection deferred.** Investigated 2026-09-02: Vercel's
+      built-in Password Protection needs a paid "Advanced Deployment
+      Protection" add-on not available on the Hobby plan; plain Vercel
+      Authentication (SSO) is free but requires every player to have a
+      Vercel account and be invited to the WISDOM TREE team — impractical
+      for casually sharing a game link. Decided to leave the site fully
+      public for now rather than build a custom app-level password gate;
+      revisit later (either build the app-level gate, or upgrade to
+      Vercel Pro for real Password Protection).
 - [ ] **User accounts:** given the standalone-but-extensible direction
       above, lean toward real (if lightweight) identity over throwaway
       `localStorage` ids — e.g. Firebase Auth, starting anonymous and
@@ -284,3 +291,9 @@ mainly shapes the "User accounts" decision below.
   exists to relink an already-created project). This commit is the
   verification push confirming auto-deploy-on-push now works; future
   changes ship on `git push` instead of manual file uploads.
+- **2026-09-02** — Investigated re-enabling access protection: Vercel
+  Password Protection needs a paid add-on not on the Hobby plan; Vercel
+  Authentication (SSO) is free but would require every player to have a
+  Vercel account on the team, which defeats casually sharing a game link.
+  User decided to leave the site public for now rather than build a
+  custom app-level password gate — see "Now / Next" above.
