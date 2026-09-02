@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useRoom } from "@/hooks/useRoom";
 import { usePlayerSession } from "@/hooks/usePlayerSession";
 import {
+  advanceAfterRps,
   chooseQuestion,
   continueToNextRound,
   dismissQuestion,
@@ -12,12 +13,15 @@ import {
   finishAnswering,
   joinRoom,
   leaveGame,
+  playAgainRps,
   startGame,
+  submitRpsChoice,
   submitScore,
 } from "@/lib/room";
 import { JoinForm } from "@/components/JoinForm";
 import { Lobby } from "@/components/Lobby";
 import { Scoreboard } from "@/components/Scoreboard";
+import { RockPaperScissors } from "@/components/RockPaperScissors";
 import { QuestionPicker } from "@/components/QuestionPicker";
 import { QuestionCard } from "@/components/QuestionCard";
 import { HeartRating } from "@/components/HeartRating";
@@ -58,6 +62,7 @@ export default function RoomPage() {
   const myPlayerId = session.playerId;
   const myPlayerName = session.name;
   const isMyTurn = room.currentTurnPlayerId === myPlayerId;
+  const opponent = room.players.find((p) => p.id !== myPlayerId);
 
   async function handleLeave() {
     if (!window.confirm("Leave the game? Your partner will see that you left.")) {
@@ -103,6 +108,18 @@ export default function RoomPage() {
           Round {Math.min(room.roundNumber, room.totalRounds)} of {room.totalRounds}
         </p>
       </div>
+
+      {room.phase === "rps" && opponent && (
+        <RockPaperScissors
+          myPlayerId={myPlayerId}
+          opponentId={opponent.id}
+          opponentName={opponent.name}
+          rpsChoices={room.rpsChoices}
+          onChoose={(choice) => submitRpsChoice(roomId, myPlayerId, choice, room.rpsChoices)}
+          onContinue={(winnerId) => advanceAfterRps(roomId, winnerId)}
+          onPlayAgain={() => playAgainRps(roomId)}
+        />
+      )}
 
       {room.phase === "choosing" &&
         (isMyTurn ? (

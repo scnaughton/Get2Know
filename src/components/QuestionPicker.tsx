@@ -163,9 +163,9 @@ export function QuestionPicker({ usedQuestionIds, onChoose, onDismiss }: Questio
       <button
         type="button"
         onClick={() => setShowAddForm((v) => !v)}
-        className="text-center text-sm font-medium text-plum/50 underline-offset-2 hover:text-plum/70 hover:underline"
+        className="rounded-xl border-2 border-blush bg-white py-3 text-base font-semibold text-blush shadow-sm transition hover:bg-blush/10"
       >
-        {showAddForm ? "Hide" : "+ Add your own question"}
+        {showAddForm ? "Hide the form" : "+ Add your own question"}
       </button>
       {showAddForm && <AddQuestionForm />}
     </div>

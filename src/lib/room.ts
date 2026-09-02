@@ -8,7 +8,7 @@ import {
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { TIER_POINTS } from "./questions";
-import type { LastRound, Player, Question, Room, RoundQuestion } from "./types";
+import type { LastRound, Player, Question, Room, RoundQuestion, RPSChoice } from "./types";
 
 const ROOM_CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/O/1/I — easy to read aloud
 const ROOM_CODE_LENGTH = 5;
@@ -53,6 +53,7 @@ export async function createRoom(
     lastRound: null,
     roundNumber: 0,
     totalRounds,
+    rpsChoices: {},
   };
 
   await setDoc(doc(db, "rooms", code), {
@@ -94,11 +95,39 @@ export async function startGame(roomId: string, players: Player[]): Promise<void
   if (players.length < MAX_PLAYERS) {
     throw new Error("Need two players to start.");
   }
+  // Games open with rock-paper-scissors — the winner asks the first
+  // question, rather than always defaulting to the room creator.
   await updateDoc(doc(db, "rooms", roomId), {
     status: "playing",
-    phase: "choosing",
-    currentTurnPlayerId: players[0].id,
+    phase: "rps",
+    currentTurnPlayerId: null,
+    rpsChoices: {},
     roundNumber: 1,
+  });
+}
+
+export async function submitRpsChoice(
+  roomId: string,
+  playerId: string,
+  choice: RPSChoice,
+  currentChoices: Record<string, RPSChoice>
+): Promise<void> {
+  await updateDoc(doc(db, "rooms", roomId), {
+    rpsChoices: { ...currentChoices, [playerId]: choice },
+  });
+}
+
+/** Either player can trigger a rematch after a tie. */
+export async function playAgainRps(roomId: string): Promise<void> {
+  await updateDoc(doc(db, "rooms", roomId), { rpsChoices: {} });
+}
+
+/** Move from the rps reveal into the game proper once a winner is confirmed. */
+export async function advanceAfterRps(roomId: string, winnerId: string): Promise<void> {
+  await updateDoc(doc(db, "rooms", roomId), {
+    phase: "choosing",
+    currentTurnPlayerId: winnerId,
+    rpsChoices: {},
   });
 }
 

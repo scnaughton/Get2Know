@@ -43,28 +43,6 @@ mainly shapes the "User accounts" decision below.
         good category to make **opt-in by default** (unchecked unless the
         creator deliberately includes it) rather than on-by-default like
         the others
-- [ ] **Make "+ Add your own question" a real, visible button.** It's
-      currently a small underlined text toggle in `QuestionPicker`
-      (`src/components/QuestionPicker.tsx`) — easy to miss. Needs a proper
-      button size and a color that stands out (not the muted
-      `text-plum/50` treatment it has today) so players actually notice
-      they can add a question mid-game. ("Leave game" got this same
-      treatment already — see "Recently shipped" below.)
-- [ ] **Rock-paper-scissors to decide who asks first.** Right now the
-      first asker is just whoever created the room (`players[0]`,
-      `startGame()` in `src/lib/room.ts`). Requested: open every game with
-      an RPS round between the two players; the winner asks the first
-      question. Design notes for whoever builds this:
-      - New room `phase` (e.g. `"rps"`) between `startGame` and the first
-        `"choosing"` — both players privately pick rock/paper/scissors,
-        reveal happens once both have picked (store each player's pick on
-        the room doc, e.g. `rpsChoices: { [playerId]: Choice }`)
-      - Standard resolution (rock > scissors > paper > rock); a tie
-        should reset and let both players pick again
-        - Winner becomes `currentTurnPlayerId` for round 1 instead of
-          defaulting to `players[0]`
-      - New component for the pick UI + reveal, shown in place of
-        `QuestionPicker`/`InlineNotice` when `phase === "rps"`
 - [ ] Two asks from the same request already appear to be shipped —
       confirm this actually covers what was meant, since they came in
       alongside the RPS request above:
@@ -109,6 +87,22 @@ mainly shapes the "User accounts" decision below.
 
 ## Recently shipped
 
+- [x] **Rock-paper-scissors decides who asks first.** Games now open with
+      an RPS round instead of always defaulting to the room creator: new
+      `phase: "rps"` between `startGame()` and the first `"choosing"`,
+      both players privately pick via the new `RockPaperScissors`
+      component, `room.rpsChoices` (keyed by player id) holds the picks.
+      Winner resolution and tie detection happen client-side from the two
+      stored choices (no extra Firestore field needed) — a tie shows
+      "Play again" (`playAgainRps()`, clears choices for a rematch), a
+      decisive result shows both picks + "Continue"
+      (`advanceAfterRps()`, sets `currentTurnPlayerId` to the winner and
+      moves to `"choosing"`). Verified against live Firestore (both a tie
+      and a win path).
+- [x] **"+ Add your own question" is now a real button.** Was a small
+      underlined text toggle in `QuestionPicker` — replaced with a
+      properly sized, blush-bordered button
+      (`border-2 border-blush`, `text-blush`) so it's clearly visible.
 - [x] **"Leave game" is now a real button.** Was a small underlined text
       link in both `Lobby` (lobby screen) and the active-play header in
       `src/app/room/[roomId]/page.tsx` — replaced with a properly sized,
@@ -290,3 +284,9 @@ mainly shapes the "User accounts" decision below.
 - **2026-09-02** — Made "Leave game" a real button (red-bordered, proper
   size) in both the lobby and active-play screens, replacing the small
   text link — closes out the item that had been sitting in Now/Next.
+- **2026-09-02** — Made "+ Add your own question" a real button
+  (blush-bordered) instead of a small text toggle.
+- **2026-09-02** — Built the rock-paper-scissors opening mechanic: games
+  now open with an RPS round (new `phase: "rps"`) and the winner asks the
+  first question, instead of always defaulting to the room creator. Ties
+  let both players replay; verified against live Firestore.

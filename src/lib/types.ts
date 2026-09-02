@@ -32,11 +32,14 @@ export interface Player {
 
 export type GamePhase =
   | "lobby"
+  | "rps"
   | "choosing"
   | "answering"
   | "scoring"
   | "reveal"
   | "finished";
+
+export type RPSChoice = "rock" | "paper" | "scissors";
 
 export type RoomStatus = "lobby" | "playing" | "finished";
 
@@ -61,6 +64,8 @@ export interface Room {
   roundNumber: number;
   /** How many questions this game runs for, chosen at creation (5, 10, or 20). */
   totalRounds: number;
+  /** Rock-paper-scissors picks for the current phase="rps" round, keyed by player id. */
+  rpsChoices: Record<string, RPSChoice>;
   /** Name of the player who left early, if the game ended that way rather than via "End game". */
   leftByName?: string | null;
 }
