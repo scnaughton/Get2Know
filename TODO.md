@@ -18,6 +18,31 @@ mainly shapes the "User accounts" decision below.
 
 ## Now / Next
 
+- [ ] **Let the game creator pick which subjects/categories are included,
+      and add more categories** — a new one for intimacy/sex topics, plus
+      surfacing Trivia (which already exists as a category but isn't
+      currently selectable anywhere). Note on terminology for whoever
+      builds this: "Light & Easy / Getting Real / Deep Dive" (mentioned in
+      the request) are the existing **tiers** (depth/point value —
+      `QuestionTier` in `src/lib/types.ts`), a separate axis from
+      **category** (subject — `QuestionCategory`: `icebreaker`, `trivia`,
+      `goals`, `past-relationships`, `deep`). What's being asked for here
+      is category selection, not a change to tiers:
+      - Add a new category (e.g. `intimacy`) to `QuestionCategory` /
+        `CATEGORY_LABELS` in `src/lib/questions.ts`, with its own tasteful
+        built-in questions (tiered like the rest — probably skews toward
+        `Getting Real`/`Deep Dive` rather than `Light & Easy`)
+      - At game creation (alongside the existing question-count selector
+        on the home page), let the creator check which categories are in
+        play for that game; store as e.g. `enabledCategories:
+        QuestionCategory[]` on the room
+      - `QuestionPicker`'s `available` list (and the "🎲 Surprise me"
+        pool) needs to filter to only the enabled categories, not just
+        exclude used questions
+      - Since intimacy/sex questions are sensitive by nature, this is a
+        good category to make **opt-in by default** (unchecked unless the
+        creator deliberately includes it) rather than on-by-default like
+        the others
 - [ ] **Make "+ Add your own question" a real, visible button.** It's
       currently a small underlined text toggle in `QuestionPicker`
       (`src/components/QuestionPicker.tsx`) — easy to miss, same issue as
@@ -146,7 +171,12 @@ mainly shapes the "User accounts" decision below.
 
 - [ ] Support more than 2 players (would need group scoring rules and a
       redesigned turn order)
-- [ ] Let the answerer pick a category, not just a tier
+- [ ] Add a category filter (not just tier) to `QuestionPicker`'s browse
+      list — related to, but distinct from, the creator-level category
+      selection in "Now / Next" above (that one controls which categories
+      are *in the game at all*; this one would let the asker filter the
+      browse list by category on top of tier, the same way the tier
+      filter tabs work today)
 - [ ] Persist finished games (a simple match history / past scores)
 - [ ] Sound/haptics for score reveals
 - [ ] Automated tests (none yet — `npm run lint` + manual smoke tests are
@@ -250,3 +280,8 @@ mainly shapes the "User accounts" decision below.
 - **2026-09-02** — Added TODO item: make "+ Add your own question" a real
   button with a proper size and standout color, instead of the small
   underlined text toggle it is today in `QuestionPicker`.
+- **2026-09-02** — Added TODO item: let the game creator pick which
+  question categories/subjects are in play, plus a new intimacy/sex
+  category and surfacing the existing (but currently unselectable)
+  Trivia category. Clarified the tier-vs-category terminology mismatch in
+  the request for whoever builds it.
