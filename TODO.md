@@ -18,6 +18,12 @@ mainly shapes the "User accounts" decision below.
 
 ## Now / Next
 
+- [ ] **Make "+ Add your own question" a real, visible button.** It's
+      currently a small underlined text toggle in `QuestionPicker`
+      (`src/components/QuestionPicker.tsx`) — easy to miss, same issue as
+      the "Leave game" link below. Needs a proper button size and a color
+      that stands out (not the muted `text-plum/50` treatment it has
+      today) so players actually notice they can add a question mid-game.
 - [ ] **Rock-paper-scissors to decide who asks first.** Right now the
       first asker is just whoever created the room (`players[0]`,
       `startGame()` in `src/lib/room.ts`). Requested: open every game with
@@ -241,3 +247,6 @@ mainly shapes the "User accounts" decision below.
   question-count-limit and "how many questions are left" display appear
   to already be covered by the existing `totalRounds` selector and
   "Round X of N" indicator — flagged for the user to confirm.
+- **2026-09-02** — Added TODO item: make "+ Add your own question" a real
+  button with a proper size and standout color, instead of the small
+  underlined text toggle it is today in `QuestionPicker`.
