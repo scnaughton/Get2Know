@@ -18,6 +18,33 @@ mainly shapes the "User accounts" decision below.
 
 ## Now / Next
 
+- [ ] **Rock-paper-scissors to decide who asks first.** Right now the
+      first asker is just whoever created the room (`players[0]`,
+      `startGame()` in `src/lib/room.ts`). Requested: open every game with
+      an RPS round between the two players; the winner asks the first
+      question. Design notes for whoever builds this:
+      - New room `phase` (e.g. `"rps"`) between `startGame` and the first
+        `"choosing"` — both players privately pick rock/paper/scissors,
+        reveal happens once both have picked (store each player's pick on
+        the room doc, e.g. `rpsChoices: { [playerId]: Choice }`)
+      - Standard resolution (rock > scissors > paper > rock); a tie
+        should reset and let both players pick again
+        - Winner becomes `currentTurnPlayerId` for round 1 instead of
+          defaulting to `players[0]`
+      - New component for the pick UI + reveal, shown in place of
+        `QuestionPicker`/`InlineNotice` when `phase === "rps"`
+- [ ] Two asks from the same request already appear to be shipped —
+      confirm this actually covers what was meant, since they came in
+      alongside the RPS request above:
+      - "The creator picks the number of questions" and "questions need
+        to be limited" — done via the `totalRounds` selector (5/10/20) at
+        creation; see "Selectable question count" in Recently shipped.
+      - "A limit on how many questions are left displayed, so both
+        parties know how much longer they'll be involved" — the
+        "Round X of N" indicator during play already shows this; if that
+        doesn't match what was meant (e.g. wanting "N questions
+        remaining" phrasing, or more prominent placement), say so and
+        it can be adjusted.
 - [ ] Decide on GitHub + Vercel auto-deploy vs. manual redeploys (see
       "Deployment" below)
 - [ ] **Make "Leave game" a clearly visible button**, not the small
@@ -208,3 +235,9 @@ mainly shapes the "User accounts" decision below.
   instead of running indefinitely; last-round reveal now offers "See
   final results" instead of "Next round". Verified against live
   Firestore.
+- **2026-09-02** — Added TODO item: open each game with a
+  rock-paper-scissors round to decide who asks the first question,
+  instead of always defaulting to the room creator. Noted that the
+  question-count-limit and "how many questions are left" display appear
+  to already be covered by the existing `totalRounds` selector and
+  "Round X of N" indicator — flagged for the user to confirm.
