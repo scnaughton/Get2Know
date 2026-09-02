@@ -17,9 +17,6 @@ out platform-scale features (matching, discovery, moderation) now. This
 mainly shapes the "User accounts" decision below.
 
 ## Now / Next
-
-- [ ] Decide on GitHub + Vercel auto-deploy vs. manual redeploys (see
-      "Deployment" below)
 - [ ] Re-enable Vercel Authentication (or replace with something lighter,
       like a password) once you're done sharing the public link for testing
 - [ ] **User accounts:** given the standalone-but-extensible direction
@@ -160,28 +157,22 @@ mainly shapes the "User accounts" decision below.
 
 ## Known follow-ups from setup
 
-- [ ] **Deployment isn't git-linked.** The live site was published via a
-      one-off file upload to Vercel, not connected to this repo — pushing
-      commits does nothing until it's linked. To get auto-deploy-on-push
-      (like your other Vercel projects), push this repo to GitHub and link
-      it with Vercel's `create_git_project`.
 - [ ] **`firestore.rules` is wide open** (`allow read, write: if true` on
       both `/rooms/{roomId}` and `/customQuestions/{questionId}`) — fine
       for a casual game with no sensitive data, but revisit if the
       project grows (e.g. once accounts exist, restrict question writes
       to signed-in players).
-- [ ] **No `package-lock.json` was included in the Vercel file deploy** —
-      the live build resolved fresh dependency versions rather than the
-      exact ones pinned locally. Once git-linked, this goes away (Vercel
-      would use the committed lockfile).
-- [ ] **Vercel Authentication is currently OFF** (see "Now / Next" above)
-      — the app is fully public at the URL below.
+- [ ] **Vercel Authentication is currently OFF** — the app is fully public
+      at the URL below.
 
 ## Deployment
 
 - **Live URL:** https://get2know-beige.vercel.app (also aliased at
   https://get2know-wisdom-tree1.vercel.app)
-- **Vercel project:** `get2know` (team: WISDOM TREE)
+- **Vercel project:** `get2know` (team: WISDOM TREE) — **linked to
+  GitHub** (`scnaughton/Get2Know`, `main` branch); pushing to `main`
+  auto-deploys to production. Manual `deploy_to_vercel` file uploads are
+  no longer the deploy path.
 - **Firebase project:** `get2know-d3dca` (Firestore enabled, rules
   published)
 - Local dev: `npm run dev` (needs `.env.local`, see `.env.local.example`)
@@ -288,3 +279,8 @@ mainly shapes the "User accounts" decision below.
   N" indicator during play already satisfies "a limit on how many
   questions are left displayed" — no change needed. Closed out that
   Now/Next item.
+- **2026-09-02** — Pushed this repo to GitHub (`scnaughton/Get2Know`) and
+  linked the Vercel project to it (done via the dashboard — no API path
+  exists to relink an already-created project). This commit is the
+  verification push confirming auto-deploy-on-push now works; future
+  changes ship on `git push` instead of manual file uploads.
