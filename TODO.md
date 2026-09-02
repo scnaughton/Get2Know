@@ -67,10 +67,16 @@ mainly shapes the "User accounts" decision below.
       graphic). Stored as `enabledCategories` on the room;
       `QuestionPicker`'s available pool (and "🎲 Surprise me") filters to
       only enabled categories, on top of excluding already-used
-      questions. Verified against live Firestore. Also see "Add a
-      category filter to QuestionPicker's browse list" in Backlog — a
-      related but distinct idea (per-turn filtering within whatever
-      categories are enabled, not which categories are enabled at all).
+      questions. Verified against live Firestore.
+- [x] **Category filter tabs in `QuestionPicker`.** Reported as "intimacy
+      questions don't appear" — root cause was that intimacy questions
+      *were* in the pool (verified against live Firestore) but there was
+      no way to browse by category, only by tier, so they were just
+      mixed in unlabeled among ~30 others under tier 2/3. Added a second
+      row of filter tabs (one per category enabled for the room, plus
+      "All topics") below the existing tier tabs, only shown when the
+      room has more than one category enabled. "🎲 Surprise me" now
+      respects the active category filter too, not just tier.
 - [x] **Rock-paper-scissors decides who asks first.** Games now open with
       an RPS round instead of always defaulting to the room creator: new
       `phase: "rps"` between `startGame()` and the first `"choosing"`,
@@ -156,12 +162,6 @@ mainly shapes the "User accounts" decision below.
 
 - [ ] Support more than 2 players (would need group scoring rules and a
       redesigned turn order)
-- [ ] Add a category filter (not just tier) to `QuestionPicker`'s browse
-      list — related to, but distinct from, the creator-level category
-      selection in "Now / Next" above (that one controls which categories
-      are *in the game at all*; this one would let the asker filter the
-      browse list by category on top of tier, the same way the tier
-      filter tabs work today)
 - [ ] Persist finished games (a simple match history / past scores)
 - [ ] Sound/haptics for score reveals
 - [ ] Automated tests (none yet — `npm run lint` + manual smoke tests are
@@ -312,3 +312,14 @@ mainly shapes the "User accounts" decision below.
 - **2026-09-02** — Rock-paper-scissors ties now auto-replay (no tap
   needed) instead of requiring a manual "Play again" — see "Recently
   shipped" above.
+- **2026-09-02** — Fixed a bug from that same change: reported as "icons
+  are not clickable after reset". `handleChoose`'s `submitting` flag was
+  only reset to `false` on error, never on success; since the RPS
+  component doesn't unmount between a tie and its auto-replay, that
+  stale `true` permanently disabled the choice buttons the moment they
+  reappeared. Now resets in a `finally` block.
+- **2026-09-02** — Fixed "intimacy questions don't appear": added
+  category filter tabs to `QuestionPicker` — see "Recently shipped"
+  above. Verified the underlying category-selection/filtering logic was
+  already correct via a live Firestore write/read before concluding the
+  real gap was a missing way to browse by category in the UI.

@@ -8,6 +8,7 @@ import { FilterButton } from "@/components/FilterButton";
 import type { Question, QuestionCategory, QuestionTier } from "@/lib/types";
 
 type TierFilter = QuestionTier | "all";
+type CategoryFilter = QuestionCategory | "all";
 const TIERS: QuestionTier[] = [1, 2, 3];
 
 // A plain module-level helper (not defined inside the component) so the
@@ -31,6 +32,7 @@ export function QuestionPicker({
   onDismiss,
 }: QuestionPickerProps) {
   const [filter, setFilter] = useState<TierFilter>("all");
+  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("all");
   const [showAddForm, setShowAddForm] = useState(false);
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [dismissingIds, setDismissingIds] = useState<Set<string>>(new Set());
@@ -45,8 +47,11 @@ export function QuestionPicker({
     [customQuestions, usedQuestionIds, enabledCategories]
   );
   const visible = useMemo(
-    () => (filter === "all" ? available : available.filter((q) => q.tier === filter)),
-    [available, filter]
+    () =>
+      available
+        .filter((q) => filter === "all" || q.tier === filter)
+        .filter((q) => categoryFilter === "all" || q.category === categoryFilter),
+    [available, filter, categoryFilter]
   );
 
   async function handleChoose(question: Question) {
@@ -61,7 +66,9 @@ export function QuestionPicker({
   }
 
   function handleSurprise(tier: QuestionTier) {
-    const pool = available.filter((q) => q.tier === tier);
+    const pool = available.filter(
+      (q) => q.tier === tier && (categoryFilter === "all" || q.category === categoryFilter)
+    );
     if (pool.length === 0) {
       setError("No questions left at that level — try another one.");
       return;
@@ -103,6 +110,27 @@ export function QuestionPicker({
           </FilterButton>
         ))}
       </div>
+
+      {enabledCategories.length > 1 && (
+        <div className="flex gap-2 overflow-x-auto">
+          <FilterButton
+            active={categoryFilter === "all"}
+            onClick={() => setCategoryFilter("all")}
+          >
+            All topics
+          </FilterButton>
+          {enabledCategories.map((category) => (
+            <FilterButton
+              key={category}
+              active={categoryFilter === category}
+              onClick={() => setCategoryFilter(category)}
+            >
+              {CATEGORY_LABELS[category]} (
+              {available.filter((q) => q.category === category).length})
+            </FilterButton>
+          ))}
+        </div>
+      )}
 
       <div className="flex max-h-80 flex-col gap-2 overflow-y-auto">
         {visible.length === 0 && (
