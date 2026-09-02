@@ -8,7 +8,15 @@ import {
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { TIER_POINTS } from "./questions";
-import type { LastRound, Player, Question, Room, RoundQuestion, RPSChoice } from "./types";
+import type {
+  LastRound,
+  Player,
+  Question,
+  QuestionCategory,
+  Room,
+  RoundQuestion,
+  RPSChoice,
+} from "./types";
 
 const ROOM_CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/O/1/I — easy to read aloud
 const ROOM_CODE_LENGTH = 5;
@@ -37,7 +45,8 @@ async function generateUniqueRoomCode(): Promise<string> {
 
 export async function createRoom(
   hostName: string,
-  totalRounds: number
+  totalRounds: number,
+  enabledCategories: QuestionCategory[]
 ): Promise<{ roomId: string; playerId: string }> {
   const code = await generateUniqueRoomCode();
   const playerId = generatePlayerId();
@@ -54,6 +63,7 @@ export async function createRoom(
     roundNumber: 0,
     totalRounds,
     rpsChoices: {},
+    enabledCategories,
   };
 
   await setDoc(doc(db, "rooms", code), {

@@ -125,6 +125,7 @@ export default function RoomPage() {
         (isMyTurn ? (
           <QuestionPicker
             usedQuestionIds={room.usedQuestionIds}
+            enabledCategories={room.enabledCategories}
             onChoose={(question) => chooseQuestion(roomId, question, room.usedQuestionIds)}
             onDismiss={(questionId) => dismissQuestion(roomId, questionId, room.usedQuestionIds)}
           />

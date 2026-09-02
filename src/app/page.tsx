@@ -5,6 +5,13 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createRoom, joinRoom } from "@/lib/room";
 import { savePlayerSession } from "@/lib/session";
+import {
+  ALL_CATEGORIES,
+  CATEGORY_LABELS,
+  DEFAULT_ENABLED_CATEGORIES,
+  OPT_IN_CATEGORIES,
+} from "@/lib/questions";
+import type { QuestionCategory } from "@/lib/types";
 
 type Mode = "create" | "join";
 
@@ -16,8 +23,17 @@ export default function HomePage() {
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
   const [totalRounds, setTotalRounds] = useState<number>(10);
+  const [enabledCategories, setEnabledCategories] = useState<QuestionCategory[]>(
+    DEFAULT_ENABLED_CATEGORIES
+  );
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  function toggleCategory(category: QuestionCategory) {
+    setEnabledCategories((prev) =>
+      prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]
+    );
+  }
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -29,10 +45,19 @@ export default function HomePage() {
       return;
     }
 
+    if (mode === "create" && enabledCategories.length === 0) {
+      setError("Pick at least one question category.");
+      return;
+    }
+
     setSubmitting(true);
     try {
       if (mode === "create") {
-        const { roomId, playerId } = await createRoom(trimmedName, totalRounds);
+        const { roomId, playerId } = await createRoom(
+          trimmedName,
+          totalRounds,
+          enabledCategories
+        );
         savePlayerSession(roomId, { playerId, name: trimmedName });
         router.push(`/room/${roomId}`);
         return;
@@ -128,6 +153,38 @@ export default function HomePage() {
                 </button>
               ))}
             </div>
+          </div>
+        )}
+
+        {mode === "create" && (
+          <div className="flex flex-col gap-1 text-sm font-medium text-plum/80">
+            Question topics
+            <div className="flex flex-wrap gap-2">
+              {ALL_CATEGORIES.map((category) => {
+                const active = enabledCategories.includes(category);
+                const isOptIn = OPT_IN_CATEGORIES.includes(category);
+                return (
+                  <button
+                    key={category}
+                    type="button"
+                    onClick={() => toggleCategory(category)}
+                    className={`rounded-full px-4 py-2 text-xs font-semibold transition ${
+                      active
+                        ? isOptIn
+                          ? "bg-plum text-white shadow"
+                          : "bg-blush text-white shadow"
+                        : "bg-white text-plum/60 shadow-sm hover:bg-blush/10"
+                    }`}
+                  >
+                    {CATEGORY_LABELS[category]}
+                    {isOptIn && !active ? " 🔒" : ""}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="mt-1 text-xs font-normal text-plum/50">
+              Intimacy &amp; Sex is off by default — tap to include it.
+            </p>
           </div>
         )}
 

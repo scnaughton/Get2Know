@@ -5,7 +5,7 @@ import { CATEGORY_LABELS, QUESTIONS, TIER_LABELS, TIER_POINTS } from "@/lib/ques
 import { useCustomQuestions } from "@/hooks/useCustomQuestions";
 import { AddQuestionForm } from "@/components/AddQuestionForm";
 import { FilterButton } from "@/components/FilterButton";
-import type { Question, QuestionTier } from "@/lib/types";
+import type { Question, QuestionCategory, QuestionTier } from "@/lib/types";
 
 type TierFilter = QuestionTier | "all";
 const TIERS: QuestionTier[] = [1, 2, 3];
@@ -19,11 +19,17 @@ function pickRandom<T>(items: T[]): T {
 
 interface QuestionPickerProps {
   usedQuestionIds: string[];
+  enabledCategories: QuestionCategory[];
   onChoose: (question: Question) => Promise<void>;
   onDismiss: (questionId: string) => Promise<void>;
 }
 
-export function QuestionPicker({ usedQuestionIds, onChoose, onDismiss }: QuestionPickerProps) {
+export function QuestionPicker({
+  usedQuestionIds,
+  enabledCategories,
+  onChoose,
+  onDismiss,
+}: QuestionPickerProps) {
   const [filter, setFilter] = useState<TierFilter>("all");
   const [showAddForm, setShowAddForm] = useState(false);
   const [pendingId, setPendingId] = useState<string | null>(null);
@@ -32,8 +38,11 @@ export function QuestionPicker({ usedQuestionIds, onChoose, onDismiss }: Questio
   const { questions: customQuestions } = useCustomQuestions();
 
   const available = useMemo(
-    () => [...QUESTIONS, ...customQuestions].filter((q) => !usedQuestionIds.includes(q.id)),
-    [customQuestions, usedQuestionIds]
+    () =>
+      [...QUESTIONS, ...customQuestions].filter(
+        (q) => !usedQuestionIds.includes(q.id) && enabledCategories.includes(q.category)
+      ),
+    [customQuestions, usedQuestionIds, enabledCategories]
   );
   const visible = useMemo(
     () => (filter === "all" ? available : available.filter((q) => q.tier === filter)),

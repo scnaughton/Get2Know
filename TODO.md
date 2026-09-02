@@ -18,31 +18,6 @@ mainly shapes the "User accounts" decision below.
 
 ## Now / Next
 
-- [ ] **Let the game creator pick which subjects/categories are included,
-      and add more categories** — a new one for intimacy/sex topics, plus
-      surfacing Trivia (which already exists as a category but isn't
-      currently selectable anywhere). Note on terminology for whoever
-      builds this: "Light & Easy / Getting Real / Deep Dive" (mentioned in
-      the request) are the existing **tiers** (depth/point value —
-      `QuestionTier` in `src/lib/types.ts`), a separate axis from
-      **category** (subject — `QuestionCategory`: `icebreaker`, `trivia`,
-      `goals`, `past-relationships`, `deep`). What's being asked for here
-      is category selection, not a change to tiers:
-      - Add a new category (e.g. `intimacy`) to `QuestionCategory` /
-        `CATEGORY_LABELS` in `src/lib/questions.ts`, with its own tasteful
-        built-in questions (tiered like the rest — probably skews toward
-        `Getting Real`/`Deep Dive` rather than `Light & Easy`)
-      - At game creation (alongside the existing question-count selector
-        on the home page), let the creator check which categories are in
-        play for that game; store as e.g. `enabledCategories:
-        QuestionCategory[]` on the room
-      - `QuestionPicker`'s `available` list (and the "🎲 Surprise me"
-        pool) needs to filter to only the enabled categories, not just
-        exclude used questions
-      - Since intimacy/sex questions are sensitive by nature, this is a
-        good category to make **opt-in by default** (unchecked unless the
-        creator deliberately includes it) rather than on-by-default like
-        the others
 - [ ] Two asks from the same request already appear to be shipped —
       confirm this actually covers what was meant, since they came in
       alongside the RPS request above:
@@ -87,6 +62,23 @@ mainly shapes the "User accounts" decision below.
 
 ## Recently shipped
 
+- [x] **Creator-selectable question categories, plus a new Intimacy &
+      Sex category.** At game creation, alongside the question-count
+      selector, the creator now picks which topics are in play for that
+      game (chip toggles, `src/app/page.tsx`) — Icebreaker, Trivia
+      (previously unselectable anywhere), Life Goals, Past Relationships,
+      and Deep Reflection are on by default; the new **Intimacy & Sex**
+      category is **opt-in** (unchecked by default, shown with a 🔒 until
+      tapped on) since it's sensitive by nature. 8 new tasteful built-in
+      questions added (`q31`–`q38` in `src/lib/questions.ts`, tier 2–3,
+      focused on communication/comfort/desire rather than anything
+      graphic). Stored as `enabledCategories` on the room;
+      `QuestionPicker`'s available pool (and "🎲 Surprise me") filters to
+      only enabled categories, on top of excluding already-used
+      questions. Verified against live Firestore. Also see "Add a
+      category filter to QuestionPicker's browse list" in Backlog — a
+      related but distinct idea (per-turn filtering within whatever
+      categories are enabled, not which categories are enabled at all).
 - [x] **Rock-paper-scissors decides who asks first.** Games now open with
       an RPS round instead of always defaulting to the room creator: new
       `phase: "rps"` between `startGame()` and the first `"choosing"`,
@@ -290,3 +282,8 @@ mainly shapes the "User accounts" decision below.
   now open with an RPS round (new `phase: "rps"`) and the winner asks the
   first question, instead of always defaulting to the room creator. Ties
   let both players replay; verified against live Firestore.
+- **2026-09-02** — Built creator-selectable question categories, plus a
+  new opt-in Intimacy & Sex category with 8 new tasteful questions
+  (`q31`–`q38`). Creator picks topics at game creation; `QuestionPicker`
+  now filters to only the enabled categories. Verified against live
+  Firestore.

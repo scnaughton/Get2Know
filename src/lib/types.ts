@@ -5,7 +5,8 @@ export type QuestionCategory =
   | "trivia"
   | "goals"
   | "past-relationships"
-  | "deep";
+  | "deep"
+  | "intimacy";
 
 export interface Question {
   id: string;
@@ -64,6 +65,8 @@ export interface Room {
   roundNumber: number;
   /** How many questions this game runs for, chosen at creation (5, 10, or 20). */
   totalRounds: number;
+  /** Which question categories the creator opted into for this game. */
+  enabledCategories: QuestionCategory[];
   /** Rock-paper-scissors picks for the current phase="rps" round, keyed by player id. */
   rpsChoices: Record<string, RPSChoice>;
   /** Name of the player who left early, if the game ended that way rather than via "End game". */

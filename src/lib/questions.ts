@@ -18,7 +18,17 @@ export const CATEGORY_LABELS: Record<QuestionCategory, string> = {
   goals: "Life Goals",
   "past-relationships": "Past Relationships",
   deep: "Deep Reflection",
+  intimacy: "Intimacy & Sex",
 };
+
+/** Categories a creator must opt into explicitly rather than getting by default. */
+export const OPT_IN_CATEGORIES: QuestionCategory[] = ["intimacy"];
+
+export const ALL_CATEGORIES = Object.keys(CATEGORY_LABELS) as QuestionCategory[];
+
+export const DEFAULT_ENABLED_CATEGORIES = ALL_CATEGORIES.filter(
+  (category) => !OPT_IN_CATEGORIES.includes(category)
+);
 
 export const QUESTIONS: Question[] = [
   // Tier 1 — light & easy
@@ -56,4 +66,15 @@ export const QUESTIONS: Question[] = [
   { id: "q28", tier: 3, category: "deep", text: "What's something about you that takes time to understand, but is worth understanding?" },
   { id: "q29", tier: 3, category: "past-relationships", text: "What led your last relationship to end, and how do you feel about it now?" },
   { id: "q30", tier: 3, category: "deep", text: "What do you need from a partner when you're struggling, versus when you're doing well?" },
+
+  // Intimacy & sex — opt-in category, focused on communication, comfort,
+  // and desire rather than anything graphic.
+  { id: "q31", tier: 2, category: "intimacy", text: "What makes you feel most desired by a partner?" },
+  { id: "q32", tier: 2, category: "intimacy", text: "How do you like affection shown — words, touch, time, or something else?" },
+  { id: "q33", tier: 2, category: "intimacy", text: "How do you like to bring up boundaries with someone new?" },
+  { id: "q34", tier: 3, category: "intimacy", text: "What helps you feel safe enough to be physically vulnerable with someone?" },
+  { id: "q35", tier: 3, category: "intimacy", text: "What's a misconception people might have about your relationship with intimacy?" },
+  { id: "q36", tier: 3, category: "intimacy", text: "How has your relationship with intimacy changed as you've gotten older?" },
+  { id: "q37", tier: 3, category: "intimacy", text: "What does feeling both safe and desired at the same time look like for you?" },
+  { id: "q38", tier: 2, category: "intimacy", text: "What's something about physical intimacy you wish a partner understood about you sooner?" },
 ];
