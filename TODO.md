@@ -18,18 +18,6 @@ mainly shapes the "User accounts" decision below.
 
 ## Now / Next
 
-- [ ] Two asks from the same request already appear to be shipped —
-      confirm this actually covers what was meant, since they came in
-      alongside the RPS request above:
-      - "The creator picks the number of questions" and "questions need
-        to be limited" — done via the `totalRounds` selector (5/10/20) at
-        creation; see "Selectable question count" in Recently shipped.
-      - "A limit on how many questions are left displayed, so both
-        parties know how much longer they'll be involved" — the
-        "Round X of N" indicator during play already shows this; if that
-        doesn't match what was meant (e.g. wanting "N questions
-        remaining" phrasing, or more prominent placement), say so and
-        it can be adjusted.
 - [ ] Decide on GitHub + Vercel auto-deploy vs. manual redeploys (see
       "Deployment" below)
 - [ ] Re-enable Vercel Authentication (or replace with something lighter,
@@ -296,3 +284,7 @@ mainly shapes the "User accounts" decision below.
   fresh before assembling the payload, built clean, and was verified live
   at https://get2know-beige.vercel.app (homepage shows "Number of
   questions", "Question topics", Trivia, and Intimacy chips as expected).
+- **2026-09-02** — Confirmed with the user that the existing "Round X of
+  N" indicator during play already satisfies "a limit on how many
+  questions are left displayed" — no change needed. Closed out that
+  Now/Next item.
