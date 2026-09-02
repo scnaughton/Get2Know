@@ -75,6 +75,10 @@ export function RockPaperScissors({
       await onChoose(choice);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Couldn't submit your choice.");
+    } finally {
+      // Always clear this, even on success: a tie loops back to this same
+      // component instance (no unmount), so a stale `true` here would
+      // permanently disable the choice buttons on every re-roll.
       setSubmitting(false);
     }
   }
