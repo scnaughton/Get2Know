@@ -191,7 +191,8 @@ mainly shapes the "User accounts" decision below.
 
 ## Deployment
 
-- **Live URL:** https://get2know-wisdom-tree1.vercel.app
+- **Live URL:** https://get2know-beige.vercel.app (also aliased at
+  https://get2know-wisdom-tree1.vercel.app)
 - **Vercel project:** `get2know` (team: WISDOM TREE)
 - **Firebase project:** `get2know-d3dca` (Firestore enabled, rules
   published)
@@ -287,3 +288,11 @@ mainly shapes the "User accounts" decision below.
   (`q31`–`q38`). Creator picks topics at game creation; `QuestionPicker`
   now filters to only the enabled categories. Verified against live
   Firestore.
+- **2026-09-02** — Deployed the full batch above (Leave-game button,
+  Add-question button, RPS opening mechanic, selectable categories) to
+  Vercel production. A prior attempt this session failed
+  (`BUILD_UTILS_SPAWN_1`, from an incomplete file payload and a
+  transcription typo in `layout.tsx`) — this redeploy re-read every file
+  fresh before assembling the payload, built clean, and was verified live
+  at https://get2know-beige.vercel.app (homepage shows "Number of
+  questions", "Question topics", Trivia, and Intimacy chips as expected).
